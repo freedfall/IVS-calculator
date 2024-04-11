@@ -1,0 +1,48 @@
+Předběžný Plán Projektu z IVS 
+Kalkulačka
+
+
+Zvolená rozšíření: 
+- Výpočty se závorkami (1)
+- Využití více číselných soustav(dvojková, osmičková, šestnáctková) (2) 
+– Dynamické změny rozložení uživatelského rozhraní (skrývání a blokování tlačítek) (3)
+- Generování náhodných čísel (4)
+- Docker (5)
+
+
+Termíny
+
+do 12.03 - Dokončení plánu, Návrh GUI, Vytvoření repozitáře
+
+13.03 - Odevzdání plánu
+
+do 24.03 - Vytvoření testů, Aritmetické operace a funkce
+
+do 12.04 - Profiling, Od/Instalátor, Makefile
+
+do 20.04 - Vytvoření manuálu (manipulace, od/instalace)
+
+do 24.04 - Dokumentace, Oprava kódu, Aktualizace GitHubu
+
+25.04 - Finální odevzdání projektu
+
+30.04 - Obhajoba
+
+
+Rozdělění práce
+
+xkinin00 - Expression parser, Makefile, (4), (1)
+xshish02 - Profiling, Testování, (5)
+xdvory00 - Expression parser, Dokumentace, (2)
+xzhuka01 - Frontend, Profiling, Dokumentace, (3)
+
+Společné:
+Math.py, GUI, Mockup
+
+
+Version Control System
+GitHub
+
+Komunikace
+Telegram
+Discord
