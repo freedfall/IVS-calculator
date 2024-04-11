@@ -48,8 +48,14 @@ def factorial(a):
 
 
 ### SQUARE ROOT FUNCTION ###
-def square_root(a):
-    if a < 0:
+def root(a, b):
+
+    if(b == 0):
+        raise ValueError("Cannot calculate square root with 0 as a power")
+    
+    if(a < 0 and b % 2 == 0):
         raise ValueError("Cannot calculate square root of negative numbers")
-    return round(a ** 0.5 , 5)
+    
+    return round(a ** (1/b) , 5)
+    
 
