@@ -181,27 +181,43 @@ class TestMathLibrary(unittest.TestCase):
         result = power(-2.2, 3)
         self.assertEqual(result, -10.648)
 
-    ##### Square root function tests #####
-    def test_square_root(self):
-        result = square_root(9)
-        self.assertEqual(result, 3)
+    #### root function tests ####
+    def test_root(self):
+        result = root(8, 3)
+        self.assertEqual(result, 2)
     
-    def test_square_root_of_negative_numbers(self):
+    def test_root_with_negative_base(self):
         with self.assertRaises(ValueError):
-            square_root(-9)
+            root(8, -3)
     
-    def test_square_root_of_zero(self):
-        result = square_root(0)
+    def test_root_of_negative_numbers_and_even_root(self):
+        with self.assertRaises(ValueError):
+            root(-8, 2)
+        
+    def test_root_of_negative_numbers_and_odd_root(self):
+        result = root(-8, 3)
+        self.assertEqual(result, -2)
+    
+    def test_root_of_floats(self):
+        result = root(8.0, 3)
+        self.assertEqual(result, 2)
+    
+    def test_root_of_negative_floats_and_even_root(self):
+        with self.assertRaises(ValueError):
+            root(-8.0, 2)
+    
+    def test_root_of_negative_floats_and_odd_root(self):
+        result = root(-8.0, 3)
+        self.assertEqual(result, -2)
+    
+    def test_root_of_zero_and_positive_numbers(self):
+        result = root(0, 3)
         self.assertEqual(result, 0)
     
-    def test_square_root_of_floats(self):
-        result = square_root(9.0)
-        self.assertEqual(result, 3)
-    
-    def test_square_root_of_negative_floats(self):
+    def test_root_of_zero_and_negative_numbers(self):
         with self.assertRaises(ValueError):
-            square_root(-9.0)
-
+            root(0, -3)
+        
     ##### Factorial function tests #####
     def test_factorial(self):
         result = factorial(5)
