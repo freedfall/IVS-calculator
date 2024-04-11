@@ -1,9 +1,16 @@
-import unittest
+## 
+# @file test.py
+# @brief Test cases for the math library
+# @Author: Timur Kininbayev
+# @Author: Artem Dvorychanskiy
+#
+##
 
+#Imports
+import unittest
 from src import calc
 
-import unittest
-
+#Functions
 class TestMathLibrary(unittest.TestCase):
 
     def test_addition(self):
@@ -41,6 +48,34 @@ class TestMathLibrary(unittest.TestCase):
     def test_subtraction(self):
         result = subtract(2, 1)
         self.assertEqual(result, 1)
+    
+    def test_subtraction_of_negative_numbers(self):
+        result = subtract(-1, -2)
+        self.assertEqual(result, 1)
+    
+    def test_subtraction_of_positive_and_negative_numbers(self):
+        result = subtract(-1, 2)
+        self.assertEqual(result, -3)
+    
+    def test_subtraction_of_zero_and_positive_numbers(self):
+        result = subtract(0, 2)
+        self.assertEqual(result, -2)
+    
+    def test_subtraction_of_zero_and_negative_numbers(self):
+        result = subtract(0, -2)
+        self.assertEqual(result, 2)
+    
+    def test_subtraction_big_numbers(self):
+        result = subtract(100000, 200000)
+        self.assertEqual(result, -100000)
+    
+    def test_subtraction_of_floats(self):
+        result = subtract(2.2, 1.1)
+        self.assertEqual(result, 1.1)
+    
+    def test_subtraction_of_negative_floats(self):
+        result = subtract(-2.2, -1.1)
+        self.assertEqual(result, -1.1)
     
     def test_multiplication(self):
         result = multiply(2, 3)
