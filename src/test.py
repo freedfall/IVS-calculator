@@ -7,7 +7,7 @@
 
 #Imports
 import unittest
-from src import calc
+from calc import *
 
 #Functions
 class TestMathLibrary(unittest.TestCase):
