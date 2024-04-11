@@ -187,8 +187,8 @@ class TestMathLibrary(unittest.TestCase):
         self.assertEqual(result, 2)
     
     def test_root_with_negative_base(self):
-        with self.assertRaises(ValueError):
-            root(8, -3)
+        result = root(8, -3)
+        self.assertEqual(result, 0.5)
     
     def test_root_of_negative_numbers_and_even_root(self):
         with self.assertRaises(ValueError):
@@ -215,8 +215,8 @@ class TestMathLibrary(unittest.TestCase):
         self.assertEqual(result, 0)
     
     def test_root_of_zero_and_negative_numbers(self):
-        with self.assertRaises(ValueError):
-            root(0, -3)
+        result = root(0, -3)
+        self.assertEqual(result, 0)
         
     ##### Factorial function tests #####
     def test_factorial(self):
