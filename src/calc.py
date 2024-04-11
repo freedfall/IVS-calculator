@@ -7,43 +7,49 @@
 
 ### ADD FUNCTION ###
 def add(a, b):
-    return a + b
+    return round(a + b , 5)
 
 ### SUBTRACT FUNCTION###
-def substract(a, b):
-    return a - b
+def subtract(a, b):
+    return round(a - b , 5)
 
 ### MULTIPLY FUNCTION ###
 def multiply(a, b):
-    return a * b
+    return round(a * b , 5)
 
 
 ### DIVISION FUNCTION ###
-def division(a, b):
-    return a / b
+def divide(a, b):
+    return round(a / b , 5)
 
 
 ### MODULO FUNCTION ###
 def modulo(a, b):
-    return a % b
+    return round(a % b , 5)
 
 
 ### POWER FUNCTION ###
 def power(a, b):
-    return a ** b
+    if (a == 0):
+        return 0
+    return round(a ** b , 5)
 
 
 ### FACTORIAL FUNCTION ###
 def factorial(a):
+    if(a < 0):
+        raise ValueError("Cannot calculate factorial of negative numbers")
+    if(type(a) != int):
+        raise ValueError("Factorial function can only accept integers")
     if a == 0:
         return 1
     else:
-        return a * factorial(a - 1)
+        return round(a * factorial(a - 1) , 5)
 
 
 ### SQUARE ROOT FUNCTION ###
 def square_root(a):
     if a < 0:
         raise ValueError("Cannot calculate square root of negative numbers")
-    return a ** 0.5
+    return round(a ** 0.5 , 5)
 
