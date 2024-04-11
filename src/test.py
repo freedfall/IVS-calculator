@@ -223,6 +223,38 @@ class TestMathLibrary(unittest.TestCase):
         with self.assertRaises(ValueError):
             factorial(-5.0)
     
-           
+    ##### Modulo function tests #####
+    def test_modulo(self):
+        result = modulo(10, 3)
+        self.assertEqual(result, 1)
+    
+    def test_modulo_of_negative_numbers(self):
+        result = modulo(-10, -3)
+        self.assertEqual(result, -1)
+    
+    def test_modulo_of_positive_and_negative_numbers(self):
+        result = modulo(-10, 3)
+        self.assertEqual(result, 2)
+    
+    def test_modulo_of_zero_and_positive_numbers(self):
+        result = modulo(0, 3)
+        self.assertEqual(result, 0)
+    
+    def test_modulo_of_zero_and_negative_numbers(self):
+        result = modulo(0, -3)
+        self.assertEqual(result, 0)
+    
+    def test_modulo_big_numbers(self):
+        result = modulo(100000, 200)
+        self.assertEqual(result, 0)
+    
+    def test_modulo_of_floats(self):
+        result = modulo(7.26, 3.3)
+        self.assertEqual(result, 0.66)
+    
+    def test_modulo_of_negative_floats(self):
+        result = modulo(-7.26, -3.3)
+        self.assertEqual(result, -0.66)
+    
 if __name__ == '__main__':
     unittest.main()
