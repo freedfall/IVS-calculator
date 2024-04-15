@@ -5,12 +5,12 @@
 ##
 
 import unittest
-from expression_parser import Analyzer
+from expression_parser import Analyser
 
-class TestAnalyzer(unittest.TestCase):
+class TestAnalyser(unittest.TestCase):
 
     def setUp(self):
-        self.analyzer = Analyzer()  # Create an instance of Analyzer before each test
+        self.analyser = Analyser()  # Create an instance of analyser before each test
     
     def test_simple_expression(self):
         token_stream = [
@@ -19,7 +19,7 @@ class TestAnalyzer(unittest.TestCase):
             {'item_type': 'T', 'value': '12.2', 'token_type': 'ID'},
             {'item_type': 'T', 'value': '$', 'token_type': 'END'}
         ]
-        self.assertTrue(self.analyzer.analyze(token_stream))
+        self.assertTrue(self.analyser.analyse_tokens(token_stream))
 
     def test_complex_expression(self):
         token_stream = [
@@ -32,7 +32,7 @@ class TestAnalyzer(unittest.TestCase):
             {'item_type': 'T', 'value': 7.8, 'token_type': 'ID'},
             {'item_type': 'T', 'value': '$', 'token_type': 'END'}
         ]
-        self.assertTrue(self.analyzer.analyze(token_stream))
+        self.assertTrue(self.analyser.analyse_tokens(token_stream))
 
     def test_invalid_expression(self):
         token_stream = [
@@ -42,13 +42,13 @@ class TestAnalyzer(unittest.TestCase):
             {'item_type': 'T', 'value': 'id', 'token_type': 'ID'},
             {'item_type': 'T', 'value': '$', 'token_type': 'END'}
         ]
-        self.assertFalse(self.analyzer.analyze(token_stream))
+        self.assertFalse(self.analyser.analyse_tokens(token_stream))
 
     def test_empty_expression(self):
         token_stream = [
             {'item_type': 'T', 'value': '$', 'token_type': 'END'}
         ]
-        self.assertTrue(self.analyzer.analyze(token_stream))
+        self.assertTrue(self.analyser.analyse_tokens(token_stream))
 
 if __name__ == '__main__':
     unittest.main()
