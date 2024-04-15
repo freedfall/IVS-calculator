@@ -5,6 +5,7 @@
 # @Author: Artem Dvorychanskiy
 ##
 
+import re
 import traceback
 from calc import *
 
@@ -77,7 +78,7 @@ class Stack:
     def create_item( self, item_type="UN", value="", token_type=""):
         return { 'item_type': item_type, 'value': value, "token_type": token_type}
 
-class Analyzer:
+class Analyser:
 
     def __init__(self):
         self.stack = Stack()
@@ -95,11 +96,38 @@ class Analyzer:
             "END" : 3,
         }
 
+
+    def tokenize(self, expression):
+        expression = expression.replace(" ",'')
+        tokens = []
+        regex_pattern = r"([-+*/])|(\d+(\.\d+)?)"
+
+        # Iterate through the expression using re.finditer to handle overlapping matches
+        for match in re.finditer(regex_pattern, expression):
+            if match.group(1):
+                char = match.group(1)
+                if char in '+-':
+                    token_type = "OP1"  # Operator type 1: + or -
+                elif char in '*/':
+                    token_type = "OP2"  # Operator type 2: * or /
+            elif match.group(2):
+                # Numeric value found (integer or float)
+                token_type = "ID"
+
+            value = match.group()
+            tokens.append({'item_type': 'T', 'value': value, 'token_type': token_type})
+
+        # Append END token at the end of the token stream
+        tokens.append({'item_type': 'T', 'value': '$', 'token_type': 'END'})
+
+        return tokens
+
+
     def access_table(self, token):
         stack_symbol = self.stack.top_terminal()["token_type"]
         return self.exp_table[self.symbol_to_index_map[stack_symbol]][self.symbol_to_index_map[token]]
 
-    def analyze(self, token_stream):
+    def analyse_tokens(self, token_stream):
         for token in token_stream:
             try:
                 self.handleToken(token)
