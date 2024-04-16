@@ -1,5 +1,6 @@
 import eel
+from logic.controller import *
 
-eel.init('web')
+eel.init('src/web')
 
 eel.start('index.html')

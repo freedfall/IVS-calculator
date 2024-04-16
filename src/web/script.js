@@ -1,5 +1,7 @@
 let expression = '';
 
+
+
 function appendToDisplay(value) {
     expression += value;
     document.getElementById('display').value = expression;
@@ -10,12 +12,14 @@ function clearDisplay() {
     document.getElementById('display').value = '';
 }
 
-function calculate() {
+async function calculate() {
+
     try {
-        let result = eval(expression);
-        document.getElementById('display').value = result;
+        let result = await eel.calculate(expression)();
+        document.getElementById('display').value = result
         expression = result.toString();
     } catch (error) {
+        console.log(error)
         document.getElementById('display').value = 'Error';
     }
 }
