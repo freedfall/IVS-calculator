@@ -115,6 +115,8 @@ class Analyser:
                 token_type = "ID"
 
             value = match.group()
+            if token_type == "ID":
+                value = float(value)
             tokens.append({'item_type': 'T', 'value': value, 'token_type': token_type})
 
         # Append END token at the end of the token stream
@@ -127,27 +129,34 @@ class Analyser:
         stack_symbol = self.stack.top_terminal()["token_type"]
         return self.exp_table[self.symbol_to_index_map[stack_symbol]][self.symbol_to_index_map[token]]
 
+    def analyse(self, expr):
+        result = self.analyse_tokens(self.tokenize(expr))
+        if result[0] == True:
+            return result[1]
+        else:
+            return False
+
     def analyse_tokens(self, token_stream):
         for token in token_stream:
             try:
-                self.handleToken(token)
+                result = self.handleToken(token)
             except Exception as e:
-                traceback.print_exc()
-                return False    
-        return True
+                return [False, e.args]    
+        return [True, result]
+    
     def handleToken(self, token):
         symbol = self.access_table(token["token_type"])
         if symbol == ">":
             if not(self.stack.reduce_rule()):
                 raise ValueError(f'Error while reducing rule happend')
-            self.handleToken(token)
+            return self.handleToken(token)
         elif symbol == "<":
             self.stack.items.insert(self.stack.find_index_of_terminal(),self.stack.create_item(item_type="CATCH")) # CATCH is for cath symbol
             self.stack.push(token)
         elif symbol == "=":
             self.stack.push(token)
         elif symbol == "F":
-            if self.stack.size() == 3:
+            if self.stack.size() == 2:
                 return self.stack.items[1]["value"]
             self.stack = Stack()
         elif symbol == "E":
