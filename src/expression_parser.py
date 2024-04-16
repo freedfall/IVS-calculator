@@ -96,6 +96,8 @@ class Analyser:
             "END" : 3,
         }
 
+    def reinitialize_stack(self):
+        self.stack = Stack()
 
     def tokenize(self, expression):
         expression = expression.replace(" ",'')
@@ -116,7 +118,10 @@ class Analyser:
 
             value = match.group()
             if token_type == "ID":
-                value = float(value)
+                if re.match(r'.*\..*',value):
+                    value = float(value)
+                else:
+                    value = int(value)
             tokens.append({'item_type': 'T', 'value': value, 'token_type': token_type})
 
         # Append END token at the end of the token stream
@@ -158,6 +163,5 @@ class Analyser:
         elif symbol == "F":
             if self.stack.size() == 2:
                 return self.stack.items[1]["value"]
-            self.stack = Stack()
         elif symbol == "E":
             raise ValueError(f'Error in handleToken with token: {token, self.stack.top_terminal()["token_type"]}')
