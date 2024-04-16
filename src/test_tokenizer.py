@@ -10,17 +10,17 @@ class TestAnalyser(unittest.TestCase):
         # Test tokenization of a basic arithmetic expression
         expression = "112 + 12.2 - 5 * 3 / 7 - 2"
         expected_tokens = [
-            {'item_type': 'T', 'value': '112', 'token_type': 'ID'},
+            {'item_type': 'T', 'value': 112, 'token_type': 'ID'},
             {'item_type': 'T', 'value': '+', 'token_type': 'OP1'},
-            {'item_type': 'T', 'value': '12.2', 'token_type': 'ID'},
+            {'item_type': 'T', 'value': 12.2, 'token_type': 'ID'},
             {'item_type': 'T', 'value': '-', 'token_type': 'OP1'},
-            {'item_type': 'T', 'value': '5', 'token_type': 'ID'},
+            {'item_type': 'T', 'value': 5, 'token_type': 'ID'},
             {'item_type': 'T', 'value': '*', 'token_type': 'OP2'},
-            {'item_type': 'T', 'value': '3', 'token_type': 'ID'},
+            {'item_type': 'T', 'value': 3, 'token_type': 'ID'},
             {'item_type': 'T', 'value': '/', 'token_type': 'OP2'},
-            {'item_type': 'T', 'value': '7', 'token_type': 'ID'},
+            {'item_type': 'T', 'value': 7, 'token_type': 'ID'},
             {'item_type': 'T', 'value': '-', 'token_type': 'OP1'},
-            {'item_type': 'T', 'value': '2', 'token_type': 'ID'},
+            {'item_type': 'T', 'value': 2, 'token_type': 'ID'},
             {'item_type': 'T', 'value': '$', 'token_type': 'END'}
         ]
         # Tokenize the expression using the tokenize method of the Analyser class
@@ -32,7 +32,7 @@ class TestAnalyser(unittest.TestCase):
         # Test tokenization of an expression containing a single digit
         expression = "5"
         expected_tokens = [
-            {'item_type': 'T', 'value': '5', 'token_type': 'ID'},
+            {'item_type': 'T', 'value': 5, 'token_type': 'ID'},
             {'item_type': 'T', 'value': '$', 'token_type': 'END'}
         ]
         token_stream = self.analyser.tokenize(expression)
