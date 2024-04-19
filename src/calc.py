@@ -7,32 +7,32 @@
 
 ### ADD FUNCTION ###
 def add(a, b):
-    return round(a + b , 5)
+    return round(a + b , 6)
 
 ### SUBTRACT FUNCTION###
 def subtract(a, b):
-    return round(a - b , 5)
+    return round(a - b , 6)
 
 ### MULTIPLY FUNCTION ###
 def multiply(a, b):
-    return round(a * b , 5)
+    return round(a * b , 6)
 
 
 ### DIVISION FUNCTION ###
 def divide(a, b):
-    return round(a / b , 5)
+    return round(a / b , 6)
 
 
 ### MODULO FUNCTION ###
 def modulo(a, b):
-    return round(a % b , 5)
+    return round(a % b , 6)
 
 
 ### POWER FUNCTION ###
 def power(a, b):
     if (a == 0):
         return 0
-    return round(a ** b , 5)
+    return round(a ** b , 6)
 
 
 ### FACTORIAL FUNCTION ###
@@ -44,18 +44,21 @@ def factorial(a):
     if a == 0:
         return 1
     else:
-        return round(a * factorial(a - 1) , 5)
+        return round(a * factorial(a - 1) , 6)
 
 
 ### SQUARE ROOT FUNCTION ###
 def root(a, b):
-
-    if(b == 0):
-        raise ValueError("Cannot calculate square root with 0 as a power")
+    # Check if the index (b) is zero
+    if b == 0:
+        raise ValueError("The index (b) cannot be zero.")
     
-    if(a < 0 and b % 2 == 0):
-        raise ValueError("Cannot calculate square root of negative numbers")
+    # Check if base (a) is negative and index (b) is even
+    if a < 0 and b % 2 == 0:
+        raise ValueError("Cannot compute the even root of a negative number.")
     
-    return round(a ** (1/b) , 5)
+    # Calculate the b-th root of a
+    if a == 0:
+        return 0
     
-
+    return a ** (1 / b)
