@@ -10,16 +10,17 @@ function appendToDisplay(value) {
 function clearDisplay() {
     expression = '';
     document.getElementById('display').value = '';
+    document.getElementById('output').value = '';
 }
 
 async function calculate() {
 
     try {
         let result = await eel.calculate(expression)();
-        document.getElementById('display').value = result
+        document.getElementById('output').value = result
         expression = result.toString();
     } catch (error) {
         console.log(error)
-        document.getElementById('display').value = 'Error';
+        document.getElementById('output').value = 'Error';
     }
 }
