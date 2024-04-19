@@ -118,7 +118,7 @@ class Analyser:
 
             value = match.group()
             if token_type == "ID":
-                if re.match(r'.*\..*',value):
+                if re.search(r'.*\..*',value):
                     value = float(value)
                 else:
                     value = int(value)
