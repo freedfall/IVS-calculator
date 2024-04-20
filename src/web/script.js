@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkbox.checked = isDarkMode;
   });
   
-  document.getElementById('checkbox').addEventListener('change', function() {
+document.getElementById('checkbox').addEventListener('change', function() {
     if (this.checked) {
       document.documentElement.setAttribute('data-theme', 'dark');
       localStorage.setItem('theme', 'dark');
@@ -13,7 +13,26 @@ document.addEventListener('DOMContentLoaded', () => {
       document.documentElement.setAttribute('data-theme', 'light');
       localStorage.setItem('theme', 'light');
     }
-  });
+});
+
+document.addEventListener('keydown', function(event) {
+    const display = document.getElementById('display');
+    const key = event.key;
+
+    // Разрешенный список символов для ввода
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '.'];
+    if (allowedKeys.includes(key)) {
+        appendToDisplay(key);
+    } else if (key === 'Enter' || key === '=') {
+        calculate();
+        event.preventDefault();
+    } else if (key === 'Backspace') {
+        expression = expression.slice(0, -1);
+        display.value = expression;
+    } else if (key === 'Escape') {
+        clearDisplay();
+    }
+});
 
 let expression = '';
 
