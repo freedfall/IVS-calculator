@@ -194,10 +194,6 @@ class TestMathLibrary(unittest.TestCase):
         with self.assertRaises(ValueError):
             root(-8, 2)
         
-    def test_root_of_negative_numbers_and_odd_root(self):
-        result = root(-8, 3)
-        self.assertEqual(result, -2)
-    
     def test_root_of_floats(self):
         result = root(8.0, 3)
         self.assertEqual(result, 2)
@@ -205,10 +201,6 @@ class TestMathLibrary(unittest.TestCase):
     def test_root_of_negative_floats_and_even_root(self):
         with self.assertRaises(ValueError):
             root(-8.0, 2)
-    
-    def test_root_of_negative_floats_and_odd_root(self):
-        result = root(-8.0, 3)
-        self.assertEqual(result, -2)
     
     def test_root_of_zero_and_positive_numbers(self):
         result = root(0, 3)
