@@ -3,4 +3,4 @@ from logic.controller import *
 
 eel.init('src/web')
 
-eel.start('index.html')
+eel.start('index.html', mode='default')
