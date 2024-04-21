@@ -1,46 +1,265 @@
+@font-face {
+    font-family: 'Inter';
+    src: url('./fonts/Inter.ttc') format('truetype');
+}
+
 body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f5f5f5;
-    font-family: Arial, sans-serif;
+    width: 100%;
+    background-color: #8972AE;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 .calculator {
-    background-color: #ffffff;
+    background: none;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
     text-align: center;
+    display: flex;
+    flex-direction: row;
+    height: 90%;
+    width: 90%;
+    margin: 0 auto;
+    padding: 0;
 }
 
 #display {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    font-size: 24px;
-    border: 1px solid #ddd;
+    width: 95%;
+    height: 100%;
+    font-size: 5vw;
+    font-weight: bold;
+    color: purple;
+    border: none;
     border-radius: 4px;
     box-sizing: border-box;
+    text-align: right;
+    background: none;
+    grid-row: 2;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.display {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    width: 50%;
+    border-radius: 10px;
+    background: linear-gradient(to bottom, #FFFFFF, rgba(188, 221, 205, .12));
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0px 4px 4px 0px #C1A3F0;
+}
+
+.input, .output {
+    position: absolute;
+    width: 95%;
+    height: 20%;
+    font-size: 1.5vw;
+    right: 0;
+    margin-right: 5%;
+    margin-top: 5%;
+    text-align: right;
+}
+
+.input {
+    grid-row: 2;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.output {
+    margin-top: 7%;
+    grid-row: 3;
+    color: rgba(255, 2555, 2555, 0.5);
+
+}
+
+#output {
+    grid-row: 3;
+    width: 95%;
+    height: 100%;
+    font-size: 7vw;
+    font-weight: bold;
+    color: purple;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: right;
+    background: none;
+    color: #523B79;
 }
 
 .keys {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 10px;
+    width: 45%;
+    padding: 0;
+    margin: 0 auto;
 }
 
 button {
-    padding: 15px;
-    font-size: 18px;
-    border-radius: 4px;
+    width: 60%;
+    height: 80%;
+    font-size: 3.5vw;
+    border-radius: 30%;
     border: none;
-    background-color: #007bff;
+    background-color: #2B4539;
     color: #ffffff;
     cursor: pointer;
+    margin: auto;
+    font-weight: 1000;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    font-family: 'Inter', sans-serif;
+    text-shadow: 0px 4px 4px 0px #00000026;
 }
 
 button:active {
     transform: translateY(1px);
+}
+
+.calc{
+    grid-column: 1 / span 4;
+    border-radius: 20px;
+    padding: 0;
+    width: 90%;
+    height: 80%;
+    background-color: #D3FFE0;
+    color: #3D4843;
+    font-size: 4vw;
+    box-shadow: 0px 4px 4px 0px #00000040;
+}
+
+.clear{
+    background-color:#C31C05;
+}
+
+.binary, .comma{
+    background-color: #7CB99D;
+}
+
+#purple-column {
+    background-color: #523B79;
+}
+
+#red-column {
+    background-color: #FF8675;
+}
+
+.rand{
+    font-size: 2.5vw;
+}
+
+.theme-switch-wrapper {
+    height: 5%;
+    position: absolute;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+}
+  
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 74px;
+    height: 37px;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(124, 185, 157, .6);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 31px;
+    width: 31px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #7CB99D;
+}
+
+input:checked + .slider:before {
+    transform: translateX(35px);
+    background-color: #523B79;
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+[data-theme="light"]{
+    body {
+        background-color: #F6F0FF;
+    }
+    .display {
+        background: linear-gradient(to bottom, rgba(195, 255, 211, 1), rgba(188, 221, 205, 0.12));
+        box-shadow: 0px 4px 4px 0px rgba(193, 163, 240, 1);
+    }
+
+    .output{
+        color: rgba(193, 163, 240, 1);
+    }
+
+    #output {
+        color: rgba(132, 56, 255, 1);
+    }
+
+    button {
+        background-color: rgba(89, 100, 95, 1); 
+    }
+
+    .binary, .comma{
+        background-color: rgba(124, 185, 157, 1);
+    }
+
+    #purple-column{
+        background-color: rgba(193, 163, 240, 1);
+    }
+
+    .clear{
+        background-color:#C31C05;
+    }
+
+    .calc {
+        background-color: rgba(149, 255, 179, 1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+  
+.input-animate, .output-animate {
+    animation: fadeIn 0.2s ease-in-out;
 }
