@@ -46,7 +46,7 @@ class Stack:
         reversed_items = list(reversed(self.items))
         for i in range(self.size()):
             if reversed_items[i]["item_type"] == "CATCH":
-                if i == 3:
+                if i == 3 and ( list(reversed(self.items))[1]["item_type"] != "NT" ):
                     operator = list(reversed(self.items))[1]["value"]
                     a = list(reversed(self.items))[2]["value"]
                     b = list(reversed(self.items))[0]["value"]
@@ -59,6 +59,10 @@ class Stack:
                             new_value = division(a, b)
                         case "*": 
                             new_value = multiply(a, b)
+                    for i in range(4):
+                        self.items.pop()
+                elif i == 3:
+                    new_value = list(reversed(self.items))[1]["value"]
                     for i in range(4):
                         self.items.pop()
                 elif i == 1 and list(reversed(self.items))[0]["token_type"] == "ID":
@@ -83,17 +87,21 @@ class Analyser:
     def __init__(self):
         self.stack = Stack()
         self.exp_table = [
-           # "+", "*", "id", "$"
-            [">", "<", "<", ">"],   # "+"
-            [">", ">", "<", ">"],   # "*"
-            [">", ">", "E", ">"],   # "id"
-            ["<", "<", "<", "F"],   # "$"
+            # "+", "*", "(", ")", "id", "$"
+            [">", "<", "<", ">", "<", ">"],   # "+"
+            [">", ">", "<", ">", "<", ">"],   # "*"
+            ["<", "<", "<", "=", "<", "E"],   # "("
+            [">", ">", "E", ">", "E", ">"],   # ")"
+            [">", ">", "E", ">", "E", ">"],   # "id"
+            ["<", "<", "<", "E", "<", "F"],   # "$"
         ]
         self.symbol_to_index_map = {
             "OP1" : 0,
-            "OP2" : 1, 
-            "ID" : 2,
-            "END" : 3,
+            "OP2" : 1,
+            "OPAR" : 2,
+            "CPAR" : 3, 
+            "ID" : 4,
+            "END" : 5,
         }
 
     def reinitialize_stack(self):
@@ -102,7 +110,7 @@ class Analyser:
     def tokenize(self, expression):
         expression = expression.replace(" ",'')
         tokens = []
-        regex_pattern = r"([-+*/])|(\d+(\.\d+)?)"
+        regex_pattern = r"([-+*/])|(\d+(\.\d+)?)|(\()|(\))"
 
         # Iterate through the expression using re.finditer to handle overlapping matches
         for match in re.finditer(regex_pattern, expression):
@@ -115,7 +123,10 @@ class Analyser:
             elif match.group(2):
                 # Numeric value found (integer or float)
                 token_type = "ID"
-
+            elif match.group() == "(":
+                token_type = "OPAR"
+            elif match.group() == ")":
+                token_type = "CPAR"
             value = match.group()
             if token_type == "ID":
                 if re.search(r'.*\..*',value):
