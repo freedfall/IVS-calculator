@@ -2,32 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <title>Basic Calculator</title>
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="calculator">
-        <input type="text" id="display" readonly>
+        <div class="display">
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                  <input type="checkbox" id="checkbox" checked />
+                  <div class="slider round"></div>
+                </label>
+              </div>
+            <div class="input">Your input</div>
+            <input type="text" id="display" readonly>
+            <div class="output">Result</div>
+            <input type="text" id="output">
+        </div>
         <div class="keys">
-            <button class="operand" onclick="appendToDisplay('7')">7</button>
-            <button class="operand" onclick="appendToDisplay('8')">8</button>
-            <button class="operand" onclick="appendToDisplay('9')">9</button>
-            <button class="operator" onclick="appendToDisplay('+')">+</button>
-            <button class="operand" onclick="appendToDisplay('4')">4</button>
-            <button class="operand" onclick="appendToDisplay('5')">5</button>
-            <button class="operand" onclick="appendToDisplay('6')">6</button>
-            <button class="operator" onclick="appendToDisplay('-')">-</button>
+            <button class="binary"> bin</button>
+            <button class="par" id="purple-column" onclick="appendToDisplay('&#40;')">&#40;</button>
+            <button class="par" id="purple-column" onclick="appendToDisplay('&#41;')">&#41;</button>
+            <button class="rand" id="red-column" onclick="random()">rand</button>
+            <button class="comma" onclick="appendToDisplay('.')">.</button>
+            <button class="operator" id="purple-column" onclick="appendToDisplay('%')">%</button>
+            <button class="operator" id="purple-column" onclick="appendToDisplay('!')">!</button>
+            <button class="operator" id="red-column" onclick="appendToDisplay('+')">+</button>
+            <button class="operand" onclick="appendToDisplay('0')">0</button>
+            <button class="operator" id="purple-column" onclick="appendToDisplay('√')">√</button>
+            <button class="operator" id="purple-column" onclick="appendToDisplay('x^n')">xn</button>
+            <button class="operator" id="red-column" onclick="appendToDisplay('-')">-</button>
             <button class="operand" onclick="appendToDisplay('1')">1</button>
             <button class="operand" onclick="appendToDisplay('2')">2</button>
             <button class="operand" onclick="appendToDisplay('3')">3</button>
-            <button class="operator" onclick="appendToDisplay('*')">*</button>
-            <button class="operand" onclick="appendToDisplay('0')">0</button>
+            <button class="operator" id="red-column" onclick="appendToDisplay('*')">*</button>
+            <button class="operand" onclick="appendToDisplay('4')">4</button>
+            <button class="operand" onclick="appendToDisplay('5')">5</button>
+            <button class="operand" onclick="appendToDisplay('6')">6</button>
+            <button class="append" id="red-column" onclick="appendToDisplay('/')">/</button>
+            <button class="operand" onclick="appendToDisplay('7')">7</button>
+            <button class="operand" onclick="appendToDisplay('8')">8</button>
+            <button class="operand" onclick="appendToDisplay('9')">9</button>
             <button class="clear" onclick="clearDisplay()">C</button>
             <button class="calc" onclick="calculate()">=</button>
-            <button class="append" onclick="appendToDisplay('.')">.</button>
         </div>
-    </div>
+    </output>
 
     <script src="script.js"></script>
     <script type="text/javascript" src="/eel.js"></script>
