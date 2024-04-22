@@ -54,19 +54,34 @@ class Stack:
                         case "+":
                             new_value = add(a, b)
                         case "-":
-                            new_value = substract(a, b)
+                            new_value = subtract(a, b)
                         case "/":
-                            new_value = division(a, b)
+                            new_value = divide(a, b)
                         case "*": 
                             new_value = multiply(a, b)
+                        case "%":
+                            new_value = modulo(a, b)
                     for i in range(4):
                         self.items.pop()
                 elif i == 3:
                     new_value = list(reversed(self.items))[1]["value"]
                     for i in range(4):
                         self.items.pop()
-                elif i == 1 and list(reversed(self.items))[0]["token_type"] == "ID":
-                    new_value = list(reversed(self.items))[0]["value"]
+                elif i == 1:
+                    tt = list(reversed(self.items))[0]["token_type"]
+                    if tt == "ID":
+                        new_value = list(reversed(self.items))[0]["value"]
+                    elif tt == "POWER" or tt == "ROOT":
+                        data = list(reversed(self.items))[0]["value"][2:-1]
+                        data = data.split(',', 1)
+                        subanalyser = Analyser()
+                        expr = subanalyser.analyse(data[1])
+                        if expr == False:
+                            raise ValueError(f'error in function arguments') 
+                        if tt == "POWER":
+                            new_value = power(subanalyser.str_to_digit_converter(data[0]), expr)
+                        else:
+                            new_value = root(expr, subanalyser.str_to_digit_converter(data[0]))
                     for i in range(2): 
                         self.items.pop()
                 else: 
@@ -101,16 +116,25 @@ class Analyser:
             "OPAR" : 2,
             "CPAR" : 3, 
             "ID" : 4,
+            "ROOT" : 4,
+            "POWER": 4,
             "END" : 5,
         }
 
     def reinitialize_stack(self):
         self.stack = Stack()
 
+    def str_to_digit_converter(self, string):
+        if re.search(r'.*\..*', string):
+            value = float(string)
+        else:
+            value = int(string)
+        return value
+
     def tokenize(self, expression):
         expression = expression.replace(" ",'')
         tokens = []
-        regex_pattern = r"([-+*/])|(\d+(\.\d+)?)|(\()|(\))"
+        regex_pattern = r"([-+*/%])|(\d+(\.\d+)?)|(\()|(\)|([rp]\[[^\]]+\]))"
 
         # Iterate through the expression using re.finditer to handle overlapping matches
         for match in re.finditer(regex_pattern, expression):
@@ -118,7 +142,7 @@ class Analyser:
                 char = match.group(1)
                 if char in '+-':
                     token_type = "OP1"  # Operator type 1: + or -
-                elif char in '*/':
+                elif char in '*/%':
                     token_type = "OP2"  # Operator type 2: * or /
             elif match.group(2):
                 # Numeric value found (integer or float)
@@ -127,26 +151,32 @@ class Analyser:
                 token_type = "OPAR"
             elif match.group() == ")":
                 token_type = "CPAR"
+            elif match.group(5):
+                if match.group(5)[0] == 'r':
+                    token_type = "ROOT"
+                else: 
+                    token_type = "POWER"
+            else:
+                raise ValueError(f'Error tokenizing')
             value = match.group()
             if token_type == "ID":
-                if re.search(r'.*\..*',value):
-                    value = float(value)
-                else:
-                    value = int(value)
+                value = self.str_to_digit_converter(value)
             tokens.append({'item_type': 'T', 'value': value, 'token_type': token_type})
 
         # Append END token at the end of the token stream
         tokens.append({'item_type': 'T', 'value': '$', 'token_type': 'END'})
 
         return tokens
-
-
+    
     def access_table(self, token):
         stack_symbol = self.stack.top_terminal()["token_type"]
         return self.exp_table[self.symbol_to_index_map[stack_symbol]][self.symbol_to_index_map[token]]
 
     def analyse(self, expr):
-        result = self.analyse_tokens(self.tokenize(expr))
+        try:
+            result = self.analyse_tokens(self.tokenize(expr))
+        except:
+            return False
         if result[0] == True:
             return result[1]
         else:
