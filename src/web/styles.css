@@ -11,7 +11,7 @@ body {
     width: 100%;
     background-color: #8972AE;
     font-family: 'Inter', sans-serif;
-    overflow: hidden;
+    overflow:visible;
     transition: background-color 0.5s ease, color 0.5s ease;
 }
 
@@ -60,6 +60,7 @@ body {
     font-size: 1.5vw;
     right: 0;
     margin-right: 5%;
+    margin-left: 5%;
     margin-top: 5%;
     text-align: right;
 }
@@ -67,6 +68,7 @@ body {
 .input {
     grid-row: 2;
     color: rgba(0, 0, 0, 0.5);
+    
 }
 
 .output {
@@ -113,10 +115,15 @@ button {
     box-shadow: 0px 4px 4px 0px #00000040;
     font-family: 'Inter', sans-serif;
     text-shadow: 0px 4px 4px 0px #00000026;
+    transition: background-color 0.5s ease;
 }
 
 button:active {
     transform: translateY(1px);
+}
+
+button:hover {
+    background-color: #3B6749;
 }
 
 .calc{
@@ -131,8 +138,17 @@ button:active {
     box-shadow: 0px 4px 4px 0px #00000040;
 }
 
+.calc:hover {
+    background-color: #0f985a;
+    color:#D3FFE0;
+}
+
 .clear{
     background-color:#C31C05;
+}
+
+.clear:hover{
+    background-color:#8b130a;
 }
 
 .binary, .comma{
@@ -143,8 +159,16 @@ button:active {
     background-color: #523B79;
 }
 
+#purple-column:hover {
+    background-color: #31165e;
+}
+
 #red-column {
     background-color: #FF8675;
+}
+
+#red-column:hover {
+    background-color: #d55443;
 }
 
 .rand{
