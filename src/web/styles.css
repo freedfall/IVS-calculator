@@ -304,6 +304,9 @@ input:checked + .slider:before {
 }
 
 [keys-theme="binary"] {
+    .binary{
+        background-color: rgba(43, 69, 57, 1);
+    }
     .operand:not(.bin){
         background-color: rgba(145, 129, 179, 1);
         color: rgba(137, 114, 174, 1);

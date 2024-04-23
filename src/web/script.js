@@ -82,6 +82,10 @@ function appendToDisplay(value) {
         updateRootPower(value);
     } else if (isEnteringExponent) {
         updatePower(value);
+    } else if (value === 'rand'){
+        value = Math.floor(Math.random() * Math.floor(101));
+        expression += value;
+        calculationExpression += value;
     } else {
         if (expression.length < maxLength) {
             expression += value;
@@ -199,8 +203,6 @@ function clearDisplay() {
     applyAnimation(display);
     applyAnimation(output);
 }
-
-
 
 async function calculate() {
     if (!isEnteringRootPower && !isEnteringExponent) {
