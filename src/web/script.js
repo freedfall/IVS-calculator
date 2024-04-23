@@ -15,6 +15,20 @@ document.getElementById('checkbox').addEventListener('change', function() {
     }
 });
 
+let expression = '';
+let rootPower = '';
+let rootValue = '';
+let root = '';
+let baseExpression = '';
+let expressionPower = '';
+let exponent = '';
+let isEnteringExponent = false;
+let isEnteringRootPower = false;
+let calculationExpression = '';
+const display = document.getElementById('display');
+const cursor = document.createElement('span');
+cursor.className = 'blinking-cursor';
+
 document.addEventListener('keydown', function(event) {
     const display = document.getElementById('display');
     const key = event.key;
@@ -28,38 +42,134 @@ document.addEventListener('keydown', function(event) {
         event.preventDefault();
     } else if (key === 'Backspace') {
         expression = expression.slice(0, -1);
-        display.value = expression;
+        calculationExpression = calculationExpression.slice(0, -1);
+        display.innerHTML = expression;
     } else if (key === 'Escape') {
         clearDisplay();
     }
 });
 
-let expression = '';
 
-function appendToDisplay(value) {
-    expression += value;
-    document.getElementById('display').value = expression;
+
+function appendToDisplay(value) {    
+    if (value === '√') {
+        insertRoot();
+        cursor.remove();
+    } else if (value === 'x^n'){
+        let lastNumberRegex = /[\d\.]+(?:[eE][+-]?\d+)?$/;
+        let match = expression.match(lastNumberRegex);
+        if (match) {
+            // save last number or expression as exponent base
+            baseExpression = match[0];
+            expressionPower = baseExpression;
+            exponent = '';
+            isEnteringExponent = true;
+        }
+    } else if (isEnteringRootPower) {
+        updateRootPower(value);
+    } 
+    else if (isEnteringExponent){
+        updatePower(value);
+    }
+    else {
+        expression += value;
+        calculationExpression += value;
+    }
+    document.getElementById('display').innerHTML = expression;
+    display.appendChild(cursor);
+}
+
+function insertRoot(){
+    // find last number in expression
+    let lastNumberRegex = /[\d\.]+(?:[eE][+-]?\d+)?$/;
+    let match = expression.match(lastNumberRegex);
+    if (match) {
+        matchCalc = calculationExpression.match(lastNumberRegex);
+        let lastNumberIndex = match.index;
+        let lastNumberIndexCalc = matchCalc.index;
+        let lastNumber = match[0];
+        // input root symbol
+        expression = expression.slice(0, lastNumberIndex) + `√${lastNumber}` + expression.slice(lastNumberIndex + lastNumber.length);
+        calculationExpression = calculationExpression.slice(0, lastNumberIndexCalc) + `√${lastNumber}` + calculationExpression.slice(lastNumberIndexCalc + lastNumber.length);
+        root = `√${lastNumber}`;
+        rootValue = root;
+    } else {
+        expression = `√()${expression}`;
+        calculationExpression = `√()${expression}`;
+        root = `√()`;
+        rootValue = root;
+    }
+    isEnteringRootPower = true;
+    rootPower = '';
+}
+
+function updateRootPower(value) {
+    cursor.remove();
+    rootPower += value;
+    let updatedRoot = `<sup class='root-power'>${rootPower}</sup>${rootValue}`;
+    expression = expression.replace(root, updatedRoot);
+    calculationExpression = calculationExpression.replace(root, updatedRoot);
+    root = updatedRoot;
+}
+
+function updatePower(value) {
+    exponent += value;
+    let updatedExpression = `${baseExpression}<sup class='root-power'>${exponent}</sup>`;
+    expression = expression.replace(expressionPower, updatedExpression);
+    expressionPower = updatedExpression;
 }
 
 function clearDisplay() {
     expression = '';
-    document.getElementById('display').value = '';
+    calculationExpression = '';
+    rootPower = '';
+    rootValue = '';
+    root = '';
+    baseExpression = '';
+    exponent = '';
+    isEnteringExponent = false;
+    isEnteringRootPower = false;
+    display.innerHTML = '';
     document.getElementById('output').value = '';
+    display.appendChild(cursor);
     applyAnimation(display);
     applyAnimation(output);
 }
 
 async function calculate() {
+    if (!isEnteringRootPower && !isEnteringExponent){
+        try {
+            let result = await eel.calculate(calculationExpression)();
+            document.getElementById('output').value = result
+            expression = result.toString();
+            calculationExpression = result.toString();
+            applyAnimation(output);
+        } catch (error) {
+            console.log(error)
+            document.getElementById('output').value = 'Error';
+            applyAnimation(output);
+        }
+    }
+    else if (isEnteringRootPower){
+        cursor.remove();
+        display.appendChild(cursor);
+        isEnteringRootPower = false;
+        rootValue = root.split('√')[1];
+        rootPower = await eel.calculate(rootPower)();
+        calculationExpression = calculationExpression.replace(`${root}`, `r[${rootPower}, ${rootValue}]`);
 
-    try {
-        let result = await eel.calculate(expression)();
-        document.getElementById('output').value = result
-        expression = result.toString();
-        applyAnimation(output);
-    } catch (error) {
-        console.log(error)
-        document.getElementById('output').value = 'Error';
-        applyAnimation(output);
+        rootPower = '';
+        rootValue = '';
+        root = '';
+    }
+    else if (isEnteringExponent){
+        cursor.remove();
+        display.appendChild(cursor);
+        calculationExpression = calculationExpression.replace(expressionPower, `p(${baseExpression}, ${exponent})`);
+        isEnteringExponent = false;
+        exponent = '';
+        expressionPower = '';
+        baseExpression = '';
     }
 }
 
