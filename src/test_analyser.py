@@ -44,5 +44,9 @@ class TestAnalyserclass(unittest.TestCase):
         expr = "100 - r[2, 4]"
         self.assertEqual(98, (self.analyser.analyse(expr)))
 
+    def test_factorial(self):
+        expr = "100 - 3!"
+        self.assertEqual(94, (self.analyser.analyse(expr)))
+
 if __name__ == '__main__':
     unittest.main()
