@@ -41,6 +41,13 @@ class Stack:
             return self.items.pop()
         else:
             raise IndexError("pop from empty stack")
+        
+    def str_to_digit_converter(self, string):
+        if re.search(r'.*\..*', string):
+            value = float(string)
+        else:
+            value = int(string)
+        return value
 
     def reduce_rule(self): 
         reversed_items = list(reversed(self.items))
@@ -67,6 +74,11 @@ class Stack:
                     new_value = list(reversed(self.items))[1]["value"]
                     for i in range(4):
                         self.items.pop()
+                elif i == 2 and list(reversed(self.items))[0]["token_type"] == "OP3":
+                        value = list(reversed(self.items))[1]["value"]
+                        new_value = factorial(value)
+                        for i in range(3):
+                            self.items.pop()
                 elif i == 1:
                     tt = list(reversed(self.items))[0]["token_type"]
                     if tt == "ID":
@@ -79,9 +91,9 @@ class Stack:
                         if expr == False:
                             raise ValueError(f'error in function arguments') 
                         if tt == "POWER":
-                            new_value = power(subanalyser.str_to_digit_converter(data[0]), expr)
+                            new_value = power(self.str_to_digit_converter(data[0]), expr)
                         else:
-                            new_value = root(expr, subanalyser.str_to_digit_converter(data[0]))
+                            new_value = root(expr, self.str_to_digit_converter(data[0]))
                     for i in range(2): 
                         self.items.pop()
                 else: 
@@ -102,17 +114,19 @@ class Analyser:
     def __init__(self):
         self.stack = Stack()
         self.exp_table = [
-            # "+", "*", "(", ")", "id", "$"
-            [">", "<", "<", ">", "<", ">"],   # "+"
-            [">", ">", "<", ">", "<", ">"],   # "*"
-            ["<", "<", "<", "=", "<", "E"],   # "("
-            [">", ">", "E", ">", "E", ">"],   # ")"
-            [">", ">", "E", ">", "E", ">"],   # "id"
-            ["<", "<", "<", "E", "<", "F"],   # "$"
+            # "+", "*", "(", ")", "id", "$", "!"
+            [">", "<", "<", ">", "<", ">", "<"],   # "+"
+            [">", ">", "<", ">", "<", ">", "<"],   # "*"
+            ["<", "<", "<", "=", "<", "E", "<"],   # "("
+            [">", ">", "E", ">", "E", ">", ">"],   # ")"
+            [">", ">", "E", ">", "E", ">", ">"],   # "id"
+            ["<", "<", "<", "E", "<", "F", "<"],   # "$"
+            [">", ">", "E", ">", "E", ">", "E"]
         ]
         self.symbol_to_index_map = {
             "OP1" : 0,
             "OP2" : 1,
+            "OP3" : 6,
             "OPAR" : 2,
             "CPAR" : 3, 
             "ID" : 4,
@@ -124,17 +138,10 @@ class Analyser:
     def reinitialize_stack(self):
         self.stack = Stack()
 
-    def str_to_digit_converter(self, string):
-        if re.search(r'.*\..*', string):
-            value = float(string)
-        else:
-            value = int(string)
-        return value
-
     def tokenize(self, expression):
         expression = expression.replace(" ",'')
         tokens = []
-        regex_pattern = r"([-+*/%])|(\d+(\.\d+)?)|(\()|(\)|([rp]\[[^\]]+\]))"
+        regex_pattern = r"([-+*/%!])|(\d+(\.\d+)?)|(\()|(\)|([rp]\[[^\]]+\]))"
 
         # Iterate through the expression using re.finditer to handle overlapping matches
         for match in re.finditer(regex_pattern, expression):
@@ -144,6 +151,8 @@ class Analyser:
                     token_type = "OP1"  # Operator type 1: + or -
                 elif char in '*/%':
                     token_type = "OP2"  # Operator type 2: * or /
+                elif char in '!':
+                    token_type = "OP3"  # Operator type 2: * or /
             elif match.group(2):
                 # Numeric value found (integer or float)
                 token_type = "ID"
@@ -160,7 +169,7 @@ class Analyser:
                 raise ValueError(f'Error tokenizing')
             value = match.group()
             if token_type == "ID":
-                value = self.str_to_digit_converter(value)
+                value = self.stack.str_to_digit_converter(value)
             tokens.append({'item_type': 'T', 'value': value, 'token_type': token_type})
 
         # Append END token at the end of the token stream
