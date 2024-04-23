@@ -34,7 +34,7 @@ document.addEventListener('keydown', function(event) {
     const key = event.key;
 
     // Разрешенный список символов для ввода
-    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '.'];
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '.', '(', ')'];
     if (allowedKeys.includes(key)) {
         appendToDisplay(key);
     } else if (key === 'Enter' || key === '=') {
