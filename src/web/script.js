@@ -3,15 +3,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const isDarkMode = checkbox.checked || localStorage.getItem('theme') === 'dark';
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
     checkbox.checked = isDarkMode;
-  });
-  
-document.getElementById('checkbox').addEventListener('change', function() {
+});
+
+document.getElementById('checkbox').addEventListener('change', function () {
     if (this.checked) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
     } else {
-      document.documentElement.setAttribute('data-theme', 'light');
-      localStorage.setItem('theme', 'light');
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
     }
 });
 
@@ -28,8 +28,10 @@ let calculationExpression = '';
 const display = document.getElementById('display');
 const cursor = document.createElement('span');
 cursor.className = 'blinking-cursor';
+const originalFontSize = parseFloat(window.getComputedStyle(document.getElementById('display')).fontSize);
+const maxLength = 8;
 
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
     const display = document.getElementById('display');
     const key = event.key;
 
@@ -49,13 +51,24 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Backspace') {
+        // if the font size is smaller than the original size
+        const currentFontSize = parseFloat(window.getComputedStyle(document.getElementById('display')).fontSize);
+        if (currentFontSize < originalFontSize) {
+            // back to the original font size
+            display.style.fontSize = (currentFontSize + 1.7) + 'px';
+        }
+    }
+});
 
 
-function appendToDisplay(value) {    
+
+function appendToDisplay(value) {
     if (value === '√') {
         insertRoot();
         cursor.remove();
-    } else if (value === 'x^n'){
+    } else if (value === 'x^n') {
         let lastNumberRegex = /[\d\.]+(?:[eE][+-]?\d+)?$/;
         let match = expression.match(lastNumberRegex);
         if (match) {
@@ -67,19 +80,28 @@ function appendToDisplay(value) {
         }
     } else if (isEnteringRootPower) {
         updateRootPower(value);
-    } 
-    else if (isEnteringExponent){
+    }
+    else if (isEnteringExponent) {
         updatePower(value);
     }
     else {
-        expression += value;
+        if (expression.length < maxLength) {
+            expression += value;
+        }
+        else {
+            const display = document.getElementById('display');
+            const currentFontSize = parseFloat(window.getComputedStyle(display).fontSize);
+            display.style.fontSize = (currentFontSize - 1.7) + 'px';
+
+            expression += value;
+        }
         calculationExpression += value;
     }
     document.getElementById('display').innerHTML = expression;
     display.appendChild(cursor);
 }
 
-function insertRoot(){
+function insertRoot() {
     // find last number in expression
     let lastNumberRegex = /[\d\.]+(?:[eE][+-]?\d+)?$/;
     let match = expression.match(lastNumberRegex);
@@ -138,12 +160,13 @@ function clearDisplay() {
 }
 
 async function calculate() {
-    if (!isEnteringRootPower && !isEnteringExponent){
+    if (!isEnteringRootPower && !isEnteringExponent) {
         try {
             let result = await eel.calculate(calculationExpression)();
             document.getElementById('output').value = result
-            expression = result.toString();
-            calculationExpression = result.toString();
+            //expression = result.toString();
+            expression = ''; // Clear the expression after calculating
+            calculationExpression = ''; // Clear the calculation expression after calculating
             applyAnimation(output);
         } catch (error) {
             console.log(error)
@@ -151,7 +174,7 @@ async function calculate() {
             applyAnimation(output);
         }
     }
-    else if (isEnteringRootPower){
+    else if (isEnteringRootPower) {
         cursor.remove();
         display.appendChild(cursor);
         isEnteringRootPower = false;
@@ -163,7 +186,7 @@ async function calculate() {
         rootValue = '';
         root = '';
     }
-    else if (isEnteringExponent){
+    else if (isEnteringExponent) {
         cursor.remove();
         display.appendChild(cursor);
         calculationExpression = calculationExpression.replace(expressionPower, `p[${baseExpression}, ${exponent}]`);
