@@ -83,9 +83,19 @@ function appendToDisplay(value) {
     } else if (isEnteringExponent) {
         updatePower(value);
     } else if (value === 'rand'){
-        value = Math.floor(Math.random() * Math.floor(101));
-        expression += value;
-        calculationExpression += value;
+        if (binaryMode){
+            value = ''
+            for (let i = 0; i < 8; i++){
+                value += Math.floor(Math.random() * 2);
+            }
+            expression += value;
+            calculationExpression += value;
+        } else{
+            value = Math.floor(Math.random() * Math.floor(101));
+            expression += value;
+            calculationExpression += value;
+        }
+
     } else {
         if (expression.length < maxLength) {
             expression += value;
