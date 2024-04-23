@@ -304,43 +304,12 @@ input:checked + .slider:before {
 }
 
 [keys-theme="binary"] {
-    button {
-        height: 70%;
+    .operand:not(.bin){
+        background-color: rgba(145, 129, 179, 1);
+        color: rgba(137, 114, 174, 1);
     }
-    .keys{
-        grid-template-rows: repeat(6, 1fr);
-    }
-    .operand:not(.binary) {
-        display: none;
-    }
-    .clear{
-        grid-column: 1;
-        grid-row: 3;
-    }
-    .zero, .one{
-        width: 60%;
-        height: 90%;
-        border-radius: 10%;
-    }
-    .zero {
-        grid-column: 1 / span 2;
-        grid-row: 4 / span 2;
-        margin-right: 30%;
-    }
-    .one {
-        grid-column: 2 / span 2;
-        grid-row: 4 / span 2;
-        margin-left: 30%;
-    }
-    .calc{
-        grid-row: 6;
-    }
-    .div {
-        grid-row: 5;
-        grid-column: 4;
-    }
-    .mul {
-        grid-row: 4;
-        grid-column: 4;
+    .operator.power, .operator.root{
+        background-color: rgba(109, 82, 155, 1) !important;
+        color: rgba(137, 114, 174, 1);
     }
 }
