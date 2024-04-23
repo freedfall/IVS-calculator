@@ -84,14 +84,15 @@ function clearDisplay() {
 
 
 async function calculate() {
-
     try {
         let result = await eel.calculate(expression)();
-        document.getElementById('output').value = result
-        expression = result.toString();
+        document.getElementById('output').value = result;
+        expression = ''; // Clear the expression after calculating
+        //document.getElementById('display').value = ''; // Clear the input field
+        document.getElementById('display').focus(); // Focus on the input field for the next input
         applyAnimation(output);
     } catch (error) {
-        console.log(error)
+        console.log(error);
         document.getElementById('output').value = 'Error';
         applyAnimation(output);
     }
