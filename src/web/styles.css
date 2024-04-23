@@ -3,6 +3,9 @@
     src: url('./fonts/Inter.ttc') format('truetype');
 }
 
+body::-webkit-scrollbar {
+    display: none;
+}
 body {
     display: flex;
     justify-content: center;
@@ -28,22 +31,25 @@ body {
 }
 
 #display {
-    width: 95%;
-    height: 100%;
+    width: 90%;
+    height: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
     font-size: 5vw;
     font-weight: bold;
-    color: purple;
+    color: rgb(82, 5, 82);
     border: none;
+    outline: none;
     border-radius: 4px;
     box-sizing: border-box;
     text-align: right;
     background: none;
     grid-row: 2;
-    color: rgba(0, 0, 0, 0.5);
     text-align: right;
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    overflow-x: auto;
 }
 
 .display {
@@ -59,7 +65,7 @@ body {
 
 .input, .output {
     position: absolute;
-    width: 95%;
+    width: 90%;
     height: 20%;
     font-size: 1.5vw;
     right: 0;
@@ -79,8 +85,8 @@ body {
     margin-top: 7%;
     grid-row: 3;
     color: rgba(255, 2555, 2555, 0.5);
-
 }
+
 
 #output {
     grid-row: 3;
