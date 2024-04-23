@@ -40,6 +40,10 @@ body {
     background: none;
     grid-row: 2;
     color: rgba(0, 0, 0, 0.5);
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .display {
@@ -286,4 +290,27 @@ input:checked + .slider:before {
   
 .input-animate, .output-animate {
     animation: fadeIn 0.2s ease-in-out;
+}
+
+.root-power {
+    font-size: 2vw;
+    margin-bottom: 5%;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+.blinking-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background-color: currentColor;
+    margin-left: 2px;
+    animation: blink 1s step-start infinite;
 }
