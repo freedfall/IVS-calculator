@@ -116,6 +116,7 @@ function updatePower(value) {
     exponent += value;
     let updatedExpression = `${baseExpression}<sup class='root-power'>${exponent}</sup>`;
     expression = expression.replace(expressionPower, updatedExpression);
+    calculationExpression = calculationExpression.replace(expressionPower, updatedExpression);
     expressionPower = updatedExpression;
 }
 
@@ -165,7 +166,7 @@ async function calculate() {
     else if (isEnteringExponent){
         cursor.remove();
         display.appendChild(cursor);
-        calculationExpression = calculationExpression.replace(expressionPower, `p(${baseExpression}, ${exponent})`);
+        calculationExpression = calculationExpression.replace(expressionPower, `p[${baseExpression}, ${exponent}]`);
         isEnteringExponent = false;
         exponent = '';
         expressionPower = '';
