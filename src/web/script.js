@@ -171,15 +171,16 @@ function clearDisplay() {
 
 
 async function calculate() {
-    if (!isEnteringRootPower && !isEnteringExponent){
-        try {
+    if (!isEnteringRootPower && !isEnteringExponent){        try {
             let result = await eel.calculate(calculationExpression)();
-            document.getElementById('output').value = result
-            expression = result.toString();
+            document.getElementById('output').value = result;
+            expression = ''; // Clear the expression after calculating
+        //document.getElementById('display').value = ''; // Clear the input field
+        document.getElementById('display').focus(); // Focus on the input field for the next input
             calculationExpression = result.toString();
             applyAnimation(output);
         } catch (error) {
-            console.log(error)
+            console.log(error);
             document.getElementById('output').value = 'Error';
             applyAnimation(output);
         }
