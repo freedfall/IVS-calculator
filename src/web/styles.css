@@ -303,20 +303,44 @@ input:checked + .slider:before {
     margin-bottom: 5%;
 }
 
-@keyframes blink {
-    0%, 100% {
-        opacity: 1;
+[keys-theme="binary"] {
+    button {
+        height: 70%;
     }
-    50% {
-        opacity: 0;
+    .keys{
+        grid-template-rows: repeat(6, 1fr);
     }
-}
-
-.blinking-cursor {
-    display: inline-block;
-    width: 2px;
-    height: 1em;
-    background-color: currentColor;
-    margin-left: 2px;
-    animation: blink 1s step-start infinite;
+    .operand:not(.binary) {
+        display: none;
+    }
+    .clear{
+        grid-column: 1;
+        grid-row: 3;
+    }
+    .zero, .one{
+        width: 60%;
+        height: 90%;
+        border-radius: 10%;
+    }
+    .zero {
+        grid-column: 1 / span 2;
+        grid-row: 4 / span 2;
+        margin-right: 30%;
+    }
+    .one {
+        grid-column: 2 / span 2;
+        grid-row: 4 / span 2;
+        margin-left: 30%;
+    }
+    .calc{
+        grid-row: 6;
+    }
+    .div {
+        grid-row: 5;
+        grid-column: 4;
+    }
+    .mul {
+        grid-row: 4;
+        grid-column: 4;
+    }
 }
