@@ -27,9 +27,8 @@ let exponent = '';
 let isEnteringExponent = false;
 let isEnteringRootPower = false;
 let calculationExpression = '';
+let binaryMode = false;
 const display = document.getElementById('display');
-const cursor = document.createElement('span');
-cursor.className = 'blinking-cursor';
 const originalFontSize = parseFloat(window.getComputedStyle(document.getElementById('display')).fontSize);
 const maxLength = 8;
 
@@ -37,8 +36,13 @@ document.addEventListener('keydown', function (event) {
     const display = document.getElementById('display');
     const key = event.key;
 
-    // Разрешенный список символов для ввода
-    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '.', '(', ')', '%'];
+    let allowedKeys = []
+    // accept only the following keys
+    if (binaryMode){
+        allowedKeys = ['0', '1', '+', '-', '*', '/', '(', ')', '%'];
+    } else{
+        allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '.', '(', ')', '%'];
+    }
     if (allowedKeys.includes(key)) {
         appendToDisplay(key);
     } else if (key === 'Enter' || key === '=') {
@@ -55,35 +59,15 @@ document.addEventListener('keydown', function (event) {
         display.innerHTML = expression;
     } else if (key === 'Escape') {
         clearDisplay();
-    }
-});
-
-// document.addEventListener('keydown', function(event) {
-//     if (event.key === 'Backspace') {
-//         // if the font size is smaller than the original size
-//         const currentFontSize = parseFloat(window.getComputedStyle(document.getElementById('display')).fontSize);
-//         if (currentFontSize < originalFontSize) {
-//             // back to the original font size
-//             display.style.fontSize = (currentFontSize + 1.7) + 'px';
-//         }
-//     }
-// });
-
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Backspace') {
-        // if the font size is smaller than the original size
-        const currentFontSize = parseFloat(window.getComputedStyle(document.getElementById('display')).fontSize);
-        if (currentFontSize < originalFontSize) {
-            // back to the original font size
-            display.style.fontSize = (currentFontSize + 1.7) + 'px';
-        }
+        event.preventDefault();
     }
 });
 
 function appendToDisplay(value) {
-    if (value === '√') {
+    if (value === 'bin'){
+        toggleBinaryMode();
+    } else if (value === '√') {
         insertRoot();
-        cursor.remove();
     } else if (value === 'x^n') {
         let lastNumberRegex = /[\d\.]+(?:[eE][+-]?\d+)?$/;
         let match = expression.match(lastNumberRegex);
@@ -96,15 +80,12 @@ function appendToDisplay(value) {
         }
     } else if (isEnteringRootPower) {
         updateRootPower(value);
-    }
-    else if (isEnteringExponent) {
+    } else if (isEnteringExponent) {
         updatePower(value);
-    }
-    else {
+    } else {
         if (expression.length < maxLength) {
             expression += value;
-        }
-        else {
+        } else {
             const display = document.getElementById('display');
             const currentFontSize = parseFloat(window.getComputedStyle(display).fontSize);
             display.style.fontSize = (currentFontSize - 1.7) + 'px';
@@ -114,7 +95,26 @@ function appendToDisplay(value) {
         calculationExpression += value;
     }
     document.getElementById('display').innerHTML = expression;
-    display.appendChild(cursor);
+}
+
+function toggleBinaryMode(){
+    binaryMode = !binaryMode;
+    if (binaryMode){
+        document.documentElement.setAttribute('keys-theme', 'binary');
+    } else{
+        document.documentElement.setAttribute('keys-theme', 'default');
+    }
+}
+
+function convertExpressionToDecimal(){
+    // Regular expression to find binary numbers adjacent to arithmetic operators or at the start/end of the string
+    const binaryRegex = /(^|\s|[\+\-\*\/\(])([01]+)(\s|[\+\-\*\/\)]|$)/g;
+
+    // Replace each binary number with its decimal equivalent
+    calculationExpression = calculationExpression.replace(binaryRegex, (match, p1, p2, p3) => {
+        const decimal = parseInt(p2, 2).toString(10); // Convert binary to decimal
+        return p1 + decimal + p3; // Reattach the parts of the expression
+    });
 }
 
 function insertRoot() {
@@ -142,7 +142,6 @@ function insertRoot() {
 }
 
 function updateRootPower(value) {
-    cursor.remove();
     rootPower += value;
     let updatedRoot = `<sup class='root-power'>${rootPower}</sup>${rootValue}`;
     expression = expression.replace(root, updatedRoot);
@@ -197,7 +196,6 @@ function clearDisplay() {
     isEnteringRootPower = false;
     display.innerHTML = '';
     document.getElementById('output').value = '';
-    display.appendChild(cursor);
     applyAnimation(display);
     applyAnimation(output);
 }
@@ -205,12 +203,18 @@ function clearDisplay() {
 
 
 async function calculate() {
-    if (!isEnteringRootPower && !isEnteringExponent) {        try {
-            let result = await eel.calculate(calculationExpression)();
+    if (!isEnteringRootPower && !isEnteringExponent) {
+        try {
+            let result = ''
+            if (binaryMode){
+                result = await eel.calculate(calculationExpression, binaryMode)();
+                result = parseInt(result).toString(2);
+            }
+            else{
+                result = await eel.calculate(calculationExpression, binaryMode)();
+            }
             document.getElementById('output').value = result;
-            //expression = ''; // Clear the expression after calculating
-        //document.getElementById('display').value = ''; // Clear the input field
-        document.getElementById('display').focus(); // Focus on the input field for the next input
+            document.getElementById('display').focus(); // Focus on the input field for the next input
             expression = ''; // Clear the expression after calculating
             calculationExpression = ''; // Clear the calculation expression after calculating
             applyAnimation(output);
@@ -221,11 +225,9 @@ async function calculate() {
         }
     }
     else if (isEnteringRootPower) {
-        cursor.remove();
-        display.appendChild(cursor);
         isEnteringRootPower = false;
         rootValue = root.split('√')[1];
-        rootPower = await eel.calculate(rootPower)();
+        rootPower = await eel.calculate(rootPower, binaryMode)();
         calculationExpression = calculationExpression.replace(`${root}`, `r[${rootPower}, ${rootValue}]`);
 
         rootPower = '';
@@ -233,8 +235,6 @@ async function calculate() {
         root = '';
     }
     else if (isEnteringExponent) {
-        cursor.remove();
-        display.appendChild(cursor);
         calculationExpression = calculationExpression.replace(expressionPower, `p[${baseExpression}, ${exponent}]`);
         isEnteringExponent = false;
         exponent = '';
