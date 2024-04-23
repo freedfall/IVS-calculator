@@ -46,7 +46,7 @@ class Stack:
         reversed_items = list(reversed(self.items))
         for i in range(self.size()):
             if reversed_items[i]["item_type"] == "CATCH":
-                if i == 3 and list(reversed(self.items))[2]["value"] != "(":
+                if i == 3 and ( list(reversed(self.items))[1]["item_type"] != "NT" ):
                     operator = list(reversed(self.items))[1]["value"]
                     a = list(reversed(self.items))[2]["value"]
                     b = list(reversed(self.items))[0]["value"]
@@ -63,7 +63,7 @@ class Stack:
                             new_value = modulo(a, b)
                     for i in range(4):
                         self.items.pop()
-                elif i == 3: 
+                elif i == 3:
                     new_value = list(reversed(self.items))[1]["value"]
                     for i in range(4):
                         self.items.pop()
@@ -102,11 +102,13 @@ class Analyser:
     def __init__(self):
         self.stack = Stack()
         self.exp_table = [
-           # "+", "*", "id", "$"
-            [">", "<", "<", ">"],   # "+"
-            [">", ">", "<", ">"],   # "*"
-            [">", ">", "E", ">"],   # "id"
-            ["<", "<", "<", "F"],   # "$"
+            # "+", "*", "(", ")", "id", "$"
+            [">", "<", "<", ">", "<", ">"],   # "+"
+            [">", ">", "<", ">", "<", ">"],   # "*"
+            ["<", "<", "<", "=", "<", "E"],   # "("
+            [">", ">", "E", ">", "E", ">"],   # ")"
+            [">", ">", "E", ">", "E", ">"],   # "id"
+            ["<", "<", "<", "E", "<", "F"],   # "$"
         ]
         self.symbol_to_index_map = {
             "OP1" : 0,
