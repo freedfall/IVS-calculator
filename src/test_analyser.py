@@ -52,6 +52,10 @@ class TestAnalyserclass(unittest.TestCase):
         expr = "r[2,100] !"
         self.assertEqual(3628800, (self.analyser.analyse(expr)))
 
+    def test_power_zero(self):
+        expr='p[2, 0]'
+        self.assertEqual(1, (self.analyser.analyse(expr)))
+
 
 
 if __name__ == '__main__':

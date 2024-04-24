@@ -2,9 +2,10 @@
 Simple calculator app and Profiling script for school project
 
 # Environment 
-Ubuntu
+Ubuntu 64bit
 
 # Autors 
+- Team: sisimasisi
 - xkinin00
 - xshish02
 - xdvory00
@@ -12,9 +13,10 @@ Ubuntu
 
 # Requirments 
 Python 3 
+
 Python [Eel](https://github.com/python-eel/Eel/tree/main?tab=readme-ov-file#starting-the-app )
 
-# Install
+# Installing reqirments
     pip install eel
 
 # Usage

@@ -91,7 +91,7 @@ class Stack:
                         data = data.split(',', 1)
                         subanalyser = Analyser()
                         expr = subanalyser.analyse(data[1])
-                        if expr == False:
+                        if isinstance(expr,bool) and expr == False:
                             raise ValueError(f'error in function arguments') 
                         if tt == "POWER":
                             new_value = power(self.str_to_digit_converter(data[0]), expr)
