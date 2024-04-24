@@ -1,8 +1,8 @@
 ## 
 # @file test.py
 # @brief Test cases for the math library
-# @Author: Timur Kininbayev
-# @Author: Artem Dvorychanskiy
+# @author: Timur Kininbayev
+# @author: Artem Dvorychanskyi
 ##
 
 #Imports

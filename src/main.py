@@ -1,3 +1,8 @@
+## @file main.py
+# @brief Main entry point for the application
+# @author Timur Kininbayev
+##
+
 import eel
 from logic.controller import *
 

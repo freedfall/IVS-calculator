@@ -1,3 +1,11 @@
+##
+# @file profiling_script.py
+#
+# @brief Script for profiling data using cProfile and generating a profiling report
+#
+# @author Artem Dvorychanskyi
+##
+
 import subprocess
 import pstats
 import random
@@ -6,14 +14,37 @@ import cProfile
 import profile_stddev
 
 def generate_data(n):
+    """
+    Generate random data for profiling.
+
+    Args:
+        n (int): The number of data points to generate.
+
+    Returns:
+        list: A list of randomly generated integers.
+
+    """
     return [random.randint(0, 100) for _ in range(n)]
 
 def profile_data(data):
+    """
+    Profile the data using the profile_stddev module.
+
+    Args:
+        data (list): The data to profile.
+
+    Returns:
+        float: The result of profiling.
+
+    """
     # Directly call the function and profile it
     result = profile_stddev.result(data)
     return result
 
 def main():
+    """
+    Main function to run the profiling experiments.
+    """
     data_10 = generate_data(10)
     data_1000 = generate_data(1000)
     data_1000000 = generate_data(1000000)
