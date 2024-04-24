@@ -76,6 +76,9 @@ class Stack:
                         self.items.pop()
                 elif i == 2 and list(reversed(self.items))[0]["token_type"] == "OP3":
                         value = list(reversed(self.items))[1]["value"]
+                        if isinstance(value, float):
+                            if value.is_integer():  # Check if the float value is already an integer
+                                value = int(value) 
                         new_value = factorial(value)
                         for i in range(3):
                             self.items.pop()

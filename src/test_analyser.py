@@ -48,5 +48,11 @@ class TestAnalyserclass(unittest.TestCase):
         expr = "100 - 3!"
         self.assertEqual(94, (self.analyser.analyse(expr)))
 
+    def test_rootfactorial(self):
+        expr = "r[2,100] !"
+        self.assertEqual(3628800, (self.analyser.analyse(expr)))
+
+
+
 if __name__ == '__main__':
     unittest.main()
