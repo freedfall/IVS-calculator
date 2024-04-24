@@ -1,0 +1,69 @@
+Result of 10 inputs: 36.772725
+
+         49 function calls in 0.001 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.001    0.001 {built-in method builtins.exec}
+        1    0.000    0.000    0.001    0.001 <string>:1(<module>)
+        1    0.000    0.000    0.001    0.001 profile_stats.py:11(profile_data)
+        1    0.000    0.000    0.001    0.001 profile_stddev.py:19(result)
+        1    0.000    0.000    0.001    0.001 profile_stddev.py:10(calculate_mean)
+       14    0.001    0.000    0.001    0.000 {built-in method builtins.round}
+        2    0.000    0.000    0.001    0.001 calc.py:22(divide)
+        1    0.000    0.000    0.000    0.000 profile_stddev.py:15(calculate_variance)
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.sum}
+       11    0.000    0.000    0.000    0.000 profile_stddev.py:16(<genexpr>)
+       10    0.000    0.000    0.000    0.000 calc.py:32(power)
+        1    0.000    0.000    0.000    0.000 calc.py:51(root)
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+Result of 1000 inputs: 28.501399
+
+         3019 function calls in 0.001 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.001    0.001 {built-in method builtins.exec}
+        1    0.000    0.000    0.001    0.001 <string>:1(<module>)
+        1    0.000    0.000    0.001    0.001 profile_stats.py:11(profile_data)
+        1    0.000    0.000    0.001    0.001 profile_stddev.py:19(result)
+        2    0.000    0.000    0.001    0.000 {built-in method builtins.sum}
+        1    0.000    0.000    0.001    0.001 profile_stddev.py:15(calculate_variance)
+     1001    0.000    0.000    0.001    0.000 profile_stddev.py:16(<genexpr>)
+     1000    0.000    0.000    0.000    0.000 calc.py:32(power)
+     1004    0.000    0.000    0.000    0.000 {built-in method builtins.round}
+        1    0.000    0.000    0.000    0.000 profile_stddev.py:10(calculate_mean)
+        2    0.000    0.000    0.000    0.000 calc.py:22(divide)
+        1    0.000    0.000    0.000    0.000 calc.py:51(root)
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+Result of 1000000 inputs: 29.16344
+
+         3000019 function calls in 0.593 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.593    0.593 {built-in method builtins.exec}
+        1    0.000    0.000    0.593    0.593 <string>:1(<module>)
+        1    0.000    0.000    0.593    0.593 profile_stats.py:11(profile_data)
+        1    0.000    0.000    0.593    0.593 profile_stddev.py:19(result)
+        2    0.049    0.024    0.592    0.296 {built-in method builtins.sum}
+        1    0.000    0.000    0.589    0.589 profile_stddev.py:15(calculate_variance)
+  1000001    0.139    0.000    0.544    0.000 profile_stddev.py:16(<genexpr>)
+  1000000    0.147    0.000    0.405    0.000 calc.py:32(power)
+  1000004    0.257    0.000    0.257    0.000 {built-in method builtins.round}
+        1    0.000    0.000    0.003    0.003 profile_stddev.py:10(calculate_mean)
+        2    0.000    0.000    0.000    0.000 calc.py:22(divide)
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        1    0.000    0.000    0.000    0.000 calc.py:51(root)
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+

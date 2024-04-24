@@ -1,58 +1,50 @@
 import subprocess
 import pstats
 import random
+import io 
+import cProfile
+import profile_stddev
 
-def run_profiling(command):
-    """Run the cProfile command to generate a stats file."""
-    subprocess.run(command, shell=True, check=True)
+def generate_data(n):
+    return [random.randint(0, 100) for _ in range(n)]
 
-def generate_numbers(count, filename):
-    with open(filename, 'w') as file:
-        numbers = (str(random.randint(1, 100)) for _ in range(count))
-        file.write(' '.join(numbers))
-
-def analyze_and_write_stats(stats_file, output_file):
-    """Analyze the stats file and write the results to the output file."""
-    stats = pstats.Stats(stats_file)
-    stats.sort_stats('time')  # Sorting by time to see the most expensive functions
-    with open(output_file, 'a') as f:  # Append mode to add each result to the same file
-        stats.stream = f
-        stats.print_stats()
-        f.write('\n\n')  # Add spacing between different profile outputs
+def profile_data(data):
+    # Directly call the function and profile it
+    result = profile_stddev.result(data)
+    return result
 
 def main():
+    data_10 = generate_data(10)
+    data_1000 = generate_data(1000)
+    data_1000000 = generate_data(1000000)
+
     
-    generate_numbers(10, 'input_10.txt')
-    generate_numbers(1000, 'input_1000.txt')
-    generate_numbers(1000000, 'input_1000000.txt')
+    profiler_10 = cProfile.Profile()
+    profiler_1000 = cProfile.Profile()
+    profiler_1000000 = cProfile.Profile()
 
-    # List of profiling commands
-    commands = [
-        "python3 -m cProfile -o profile_10.stats profile_stddev.py < input_10.txt",
-        "python3 -m cProfile -o profile_1000.stats profile_stddev.py < input_1000.txt",
-        "python3 -m cProfile -o profile_1000000.stats profile_stddev.py < input_1000000.txt"
-    ]
+   
+    profiler_10.runctx('profile_data(data_10)', globals(), locals())
+    result_10 = profile_data(data_10)
 
-    # Run each profiling command
-    for command in commands:
-        run_profiling(command)
+    profiler_1000.runctx('profile_data(data_1000)', globals(), locals())
+    result_1000 = profile_data(data_1000)
 
-    # Output file where the analysis results will be stored
-    output_file = 'combined_analysis.txt'
-    
-    # Open the output file to overwrite any existing data
-    open(output_file, 'w').close()
+    profiler_1000000.runctx('profile_data(data_1000000)', globals(), locals())
+    result_1000000 = profile_data(data_1000000)
 
-    # Analyze each stats file and write the results
-    analyze_and_write_stats('profile_10.stats', output_file)
-    analyze_and_write_stats('profile_1000.stats', output_file)
-    analyze_and_write_stats('profile_1000000.stats', output_file)
+    with open("../profiling/vystup.txt", "w") as f:
+        p = pstats.Stats(profiler_10, stream=f)
+        f.write(f"Result of 10 inputs: {result_10}\n\n")
+        p.strip_dirs().sort_stats("cumulative").print_stats()
 
-    #delete the stats files
-    subprocess.run("rm profile_10.stats profile_1000.stats profile_1000000.stats", shell=True, check=True)
-    #delete the input files
-    subprocess.run("rm input_10.txt input_1000.txt input_1000000.txt", shell=True, check=True)
+        p = pstats.Stats(profiler_1000, stream=f)
+        f.write(f"Result of 1000 inputs: {result_1000}\n\n")
+        p.strip_dirs().sort_stats("cumulative").print_stats()
 
+        p = pstats.Stats(profiler_1000000, stream=f)
+        f.write(f"Result of 1000000 inputs: {result_1000000}\n\n")
+        p.strip_dirs().sort_stats("cumulative").print_stats()
 
 if __name__ == '__main__':
     main()

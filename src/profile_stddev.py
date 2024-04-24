@@ -16,12 +16,15 @@ def calculate_variance(numbers, mean):
     sum_of_squares = sum(power((x - mean), 2) for x in numbers) 
     return divide(sum_of_squares, (len(numbers) - 1))
 
-def main():
-    numbers = read_numbers()
+def result(numbers):
     mean = calculate_mean(numbers)
     variance = calculate_variance(numbers, mean)
     standard_deviation = root(variance, 2)  # Using the new sqrt function from calc
-    print(round(standard_deviation,7))
+    return round(standard_deviation,7)
 
+def main():
+    numbers = read_numbers()
+    print(result(numbers))
+    
 if __name__ == "__main__":
     main()
