@@ -66,9 +66,9 @@ document.addEventListener('keydown', function (event) {
 function appendToDisplay(value) {
     if (value === 'bin'){
         toggleBinaryMode();
-    } else if (value === '√') {
+    } else if (value === '√' && !binaryMode) {
         insertRoot();
-    } else if (value === 'x^n') {
+    } else if (value === 'x^n' && !binaryMode) {
         let lastNumberRegex = /[\d\.]+(?:[eE][+-]?\d+)?$/;
         let match = expression.match(lastNumberRegex);
         if (match) {
@@ -83,32 +83,35 @@ function appendToDisplay(value) {
     } else if (isEnteringExponent) {
         updatePower(value);
     } else if (value === 'rand'){
-        if (binaryMode){
-            value = ''
-            for (let i = 0; i < 8; i++){
-                value += Math.floor(Math.random() * 2);
-            }
-            expression += value;
-            calculationExpression += value;
-        } else{
-            value = Math.floor(Math.random() * Math.floor(101));
-            expression += value;
-            calculationExpression += value;
-        }
-
+        generateRandomNumber();
     } else {
-        if (expression.length < maxLength) {
-            expression += value;
-        } else {
+        if (expression.length >= maxLength) {
             const display = document.getElementById('display');
             const currentFontSize = parseFloat(window.getComputedStyle(display).fontSize);
             display.style.fontSize = (currentFontSize - 1.7) + 'px';
 
-            expression += value;
         }
-        calculationExpression += value;
+        if (binaryMode && ['0', '1', '+', '-', '*', '/', '(', ')', '%', '!'].includes(value) || !binaryMode){
+            expression += value;
+            calculationExpression += value;
+        } 
     }
     document.getElementById('display').innerHTML = expression;
+}
+
+function generateRandomNumber(){
+    if (binaryMode){
+        value = ''
+        for (let i = 0; i < 8; i++){
+            value += Math.floor(Math.random() * 2);
+        }
+        expression += value;
+        calculationExpression += value;
+    } else{
+        value = Math.floor(Math.random() * Math.floor(101));
+        expression += value;
+        calculationExpression += value;
+    } 
 }
 
 function toggleBinaryMode(){
@@ -171,22 +174,6 @@ function updatePower(value) {
     expressionPower = updatedExpression;
 }
 
-function updatePower(value) {
-    exponent += value;
-    let updatedExpression = `${baseExpression}<sup class='root-power'>${exponent}</sup>`;
-    expression = expression.replace(expressionPower, updatedExpression);
-    calculationExpression = calculationExpression.replace(expressionPower, updatedExpression);
-    expressionPower = updatedExpression;
-}
-
-function updatePower(value) {
-    exponent += value;
-    let updatedExpression = `${baseExpression}<sup class='root-power'>${exponent}</sup>`;
-    expression = expression.replace(expressionPower, updatedExpression);
-    calculationExpression = calculationExpression.replace(expressionPower, updatedExpression);
-    expressionPower = updatedExpression;
-}
-
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Backspace') {
         // if the font size is smaller than the original size
@@ -226,10 +213,14 @@ async function calculate() {
                 result = await eel.calculate(calculationExpression, binaryMode)();
             }
             document.getElementById('output').value = result;
-            document.getElementById('display').focus(); // Focus on the input field for the next input
             expression = ''; // Clear the expression after calculating
             calculationExpression = ''; // Clear the calculation expression after calculating
-            applyAnimation(output);
+            applyAnimation(output); 
+            const currentFontSize = parseFloat(window.getComputedStyle(document.getElementById('display')).fontSize);
+            if (currentFontSize < originalFontSize) {
+                // back to the original font size
+                display.style.fontSize = originalFontSize + 'px';
+            }
         } catch (error) {
             console.log(error);
             document.getElementById('output').value = 'Error';
