@@ -3,4 +3,11 @@ from logic.controller import *
 
 eel.init('src/web')
 
-eel.start('index.html', mode='default')
+if eel.chrome.find_path():
+    mode = 'chrome'
+elif eel.edge.find_path():
+    mode = 'edge'
+else:
+    mode ='default' 
+
+eel.start('index.html', mode=mode)
