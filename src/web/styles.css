@@ -71,14 +71,13 @@ body {
     right: 0;
     margin-right: 5%;
     margin-left: 5%;
-    margin-top: 5%;
+    /* margin-top: 5%; */
     text-align: right;
 }
 
 .input {
     grid-row: 2;
     color: rgba(0, 0, 0, 0.5);
-    
 }
 
 .output {

@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const isDarkMode = checkbox.checked || localStorage.getItem('theme') === 'dark';
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
     checkbox.checked = isDarkMode;
-  });
+});
  
-document.getElementById('checkbox').addEventListener('change', function() {
+  document.getElementById('checkbox').addEventListener('change', function() {
     if (this.checked) {
         document.documentElement.setAttribute('data-theme', 'dark');
         localStorage.setItem('theme', 'dark');
@@ -81,6 +81,7 @@ function appendToDisplay(value) {
     } else if (isEnteringRootPower) {
         updateRootPower(value);
     } else if (isEnteringExponent) {
+        console.log('root power')
         updatePower(value);
     } else if (value === 'rand'){
         if (binaryMode){
@@ -108,7 +109,7 @@ function appendToDisplay(value) {
         }
         calculationExpression += value;
     }
-    document.getElementById('display').innerHTML = expression;
+    document.getElementById('display').value = expression;
 }
 
 function toggleBinaryMode(){
@@ -155,6 +156,19 @@ function insertRoot() {
     rootPower = '';
 }
 
+let exponents = {
+    0: '⁰',
+    1: '¹',
+    2: '²',
+    3: '³',
+    4: '⁴',
+    5: '⁵',
+    6: '⁶',
+    7: '⁷',
+    8: '⁸',
+    9: '⁹'
+};
+
 function updateRootPower(value) {
     rootPower += value;
     let updatedRoot = `<sup class='root-power'>${rootPower}</sup>${rootValue}`;
@@ -163,29 +177,16 @@ function updateRootPower(value) {
     root = updatedRoot;
 }
 
-function updatePower(value) {
-    exponent += value;
-    let updatedExpression = `${baseExpression}<sup class='root-power'>${exponent}</sup>`;
-    expression = expression.replace(expressionPower, updatedExpression);
-    calculationExpression = calculationExpression.replace(expressionPower, updatedExpression);
-    expressionPower = updatedExpression;
-}
 
 function updatePower(value) {
     exponent += value;
-    let updatedExpression = `${baseExpression}<sup class='root-power'>${exponent}</sup>`;
-    expression = expression.replace(expressionPower, updatedExpression);
+    let updatedExpression = `${baseExpression}${superscripts[exponent]}`;
+    expression = updatedExpression; // Update the entire expression with the updated exponent
     calculationExpression = calculationExpression.replace(expressionPower, updatedExpression);
     expressionPower = updatedExpression;
+    document.getElementById('display').value = updatedExpression; // Update the display input with the updated calculation expression
 }
 
-function updatePower(value) {
-    exponent += value;
-    let updatedExpression = `${baseExpression}<sup class='root-power'>${exponent}</sup>`;
-    expression = expression.replace(expressionPower, updatedExpression);
-    calculationExpression = calculationExpression.replace(expressionPower, updatedExpression);
-    expressionPower = updatedExpression;
-}
 
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Backspace') {
@@ -208,7 +209,7 @@ function clearDisplay() {
     exponent = '';
     isEnteringExponent = false;
     isEnteringRootPower = false;
-    display.innerHTML = '';
+    display.value = '';
     document.getElementById('output').value = '';
     applyAnimation(display);
     applyAnimation(output);

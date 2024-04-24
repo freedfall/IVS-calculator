@@ -1,23 +1,23 @@
-# Project details
+## Project details
 Simple calculator app and Profiling script for school project
 
-# Environment 
+## Environment 
 Ubuntu
 
-# Autors 
+## Autors 
 - xkinin00
 - xshish02
 - xdvory00
 - xzhuka01
 
-# Requirments 
+## Requirments 
 Python 3 
 Python [Eel](https://github.com/python-eel/Eel/tree/main?tab=readme-ov-file#starting-the-app )
 
-# Install
+## Install
     pip install eel
 
-# Usage
+## Usage
 ..../IVS-calculator$ python3 src/main.py
 
 ## License
