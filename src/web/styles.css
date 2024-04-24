@@ -206,6 +206,30 @@ button:hover {
     display: none;
 }
 
+.log-button {
+    position: absolute;
+    width: 10%;
+    height: 5%;
+    margin: 2%;
+    font-size: 1.5vw;
+    top: 0;
+    right: 0;
+    /* background-color: #7CB99D; */
+    border-radius: 34px;
+    transition: .4s;
+}
+
+.log {
+    display: none;
+    grid-row: 1;
+    grid-column: 1;
+    width: 90%;
+    height: 70%;
+    font-size: 1.5vw;
+    text-align: right;
+    margin: 10% auto 0 auto;
+    overflow:-moz-hidden-unscrollable;
+}
 .slider {
     position: absolute;
     cursor: pointer;

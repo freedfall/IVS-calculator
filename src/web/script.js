@@ -18,6 +18,8 @@ document.getElementById('checkbox').addEventListener('change', function() {
 });
 
 let expression = '';
+let lastResult = '';
+let log = '';
 let rootPower = '';
 let rootValue = '';
 let root = '';
@@ -39,9 +41,9 @@ document.addEventListener('keydown', function (event) {
     let allowedKeys = []
     // accept only the following keys
     if (binaryMode){
-        allowedKeys = ['0', '1', '+', '-', '*', '/', '(', ')', '%'];
+        allowedKeys = ['0', '1', '+', '-', '*', '/', '(', ')', '%', '!'];
     } else{
-        allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '.', '(', ')', '%'];
+        allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '.', '(', ')', '%', '!'];
     }
     if (allowedKeys.includes(key)) {
         appendToDisplay(key);
@@ -89,11 +91,18 @@ function appendToDisplay(value) {
             const display = document.getElementById('display');
             const currentFontSize = parseFloat(window.getComputedStyle(display).fontSize);
             display.style.fontSize = (currentFontSize - 1.7) + 'px';
-
         }
         if (binaryMode && ['0', '1', '+', '-', '*', '/', '(', ')', '%', '!'].includes(value) || !binaryMode){
-            expression += value;
-            calculationExpression += value;
+            if (lastResult !== '' && ['+', '-', '*', '/', '%', '!'].includes(value) && expression === '') {
+                expression += lastResult;
+                calculationExpression += lastResult;
+                expression += value;
+                calculationExpression += value;
+            }
+            else {
+                expression += value;
+                calculationExpression += value;
+            }
         } 
     }
     document.getElementById('display').innerHTML = expression;
@@ -185,6 +194,16 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+function toggleLog() {
+    const logElement = document.getElementById('log');
+    if (logElement.style.display === 'none') {
+        logElement.style.display = 'block';
+        logElement.innerHTML = log;
+    }
+    else {
+        logElement.style.display = 'none';
+    }
+}
 function clearDisplay() {
     expression = '';
     calculationExpression = '';
@@ -201,6 +220,17 @@ function clearDisplay() {
     applyAnimation(output);
 }
 
+function handleLog(){
+    //count the number of <br> tags in the log
+    let count = (log.match(/<br>/g) || []).length;
+    if (count > 3){
+        //delete the first line
+        let firstLine = log.split('<br>')[0];
+        log = log.replace(firstLine + '<br>', '');
+        document.getElementById('log').innerHTML = log;
+    }
+}
+
 async function calculate() {
     if (!isEnteringRootPower && !isEnteringExponent) {
         try {
@@ -208,13 +238,20 @@ async function calculate() {
             if (binaryMode){
                 result = await eel.calculate(calculationExpression, binaryMode)();
                 result = parseInt(result).toString(2);
-            }
-            else{
+            } else{
                 result = await eel.calculate(calculationExpression, binaryMode)();
             }
             document.getElementById('output').value = result;
+            
+            lastResult = result;
+            handleLog();
+            log += expression + '<br>';
+            if (document.getElementById('log').style.display === 'block') {
+                document.getElementById('log').innerHTML = log;
+            }
             expression = ''; // Clear the expression after calculating
             calculationExpression = ''; // Clear the calculation expression after calculating
+            
             applyAnimation(output); 
             const currentFontSize = parseFloat(window.getComputedStyle(document.getElementById('display')).fontSize);
             if (currentFontSize < originalFontSize) {
