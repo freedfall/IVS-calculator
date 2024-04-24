@@ -1,7 +1,7 @@
 ## 
 # @file test_analyser.py
 # @brief Test cases for analyser behaviour 
-# @Author: Sviatoslav Shishnev
+# @author: Sviatoslav Shishnev
 ##
 
 import unittest

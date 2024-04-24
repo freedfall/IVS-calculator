@@ -1,8 +1,8 @@
 ## 
 # @file expression_parser.py
 # @brief Expression parser implementation 
-# @Author: Sviatoslav Shishnev
-# @Author: Artem Dvorychanskyi
+# @author: Sviatoslav Shishnev
+# @author: Artem Dvorychanskyi
 ##
 
 import re
