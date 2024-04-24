@@ -1,4 +1,8 @@
-xkinin00 100 (GUI, front-end, Matematické operace)
-xshish02 100 (Analýza matematických výrazů, základní propojení uživatelského rozhraní a pozadí)
-xdvory00 100 (Matematické operace, pofiling, instalátory)
-xzhuka01 100 (GUI, mockup, dokumentace, prezentace, uživatelská přiručka)
+Měli jsme následující rozšíření: 
+- Výpočty se závorkami (1)
+- Využití více číselných soustav(dvojková, osmičková, šestnáctková) (2) 
+– Dynamické změny rozložení uživatelského rozhraní (skrývání a blokování tlačítek) (3)
+- Generování náhodných čísel (4)
+- Docker (5)
+
+Ze kterých jsou implementovaná všechna, kromě Dockeru.

@@ -1,0 +1,4 @@
+xkinin00 100 (GUI, front-end, Matematické operace)
+xshish02 100 (Analýza matematických výrazů, základní propojení uživatelského rozhraní a pozadí)
+xdvory00 100 (Matematické operace, pofiling, instalátory)
+xzhuka01 100 (GUI, mockup, dokumentace, prezentace, uživatelská přiručka)
