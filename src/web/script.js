@@ -17,19 +17,81 @@ document.getElementById('checkbox').addEventListener('change', function() {
     }
 });
 
-let expression = '';
-let lastResult = '';
+document.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', function() {
+        this.blur();
+    });
+});
+
+class Stack{
+    constructor(){
+        this.items = [];
+    }
+    push(element){
+        this.items.push(element);
+    }
+    pop(){
+        if (this.items.length === 0){
+            return "Underflow";
+        }
+        
+        let item = this.items.pop();
+        let expr = `${item.type}[${item.base}, ${item.exponent}]`;
+
+        let topItem = this.peek();
+        if (topItem){
+            if (topItem.state === 'base'){
+                topItem.base += expr;
+                isEnteringRootPower = false;
+            } else{
+                topItem.exponent += expr;
+            }
+        } else{
+            calculationExpression += expr;
+            isEnteringRootPower = false;
+            stackState = false;
+        }
+    }
+    peek(){
+        if (this.items.length === 0){
+            return false;
+        }
+        return this.items[this.items.length - 1];
+    }
+    isEmpty(){
+        return this.items.length === 0;
+    }
+}
+
+/**
+ * @class StackItem
+ * @attribute state - base, exponent
+ */
+class StackItem {
+    constructor(type, position){
+        this.state = 'base';
+        this.type = type;
+        this.base = '';
+        this.exponent = '';
+        this.position = position;
+    }
+}
+
 let log = '';
+let root = '';
+let stack = new Stack();
+let exponent = '';
 let rootPower = '';
 let rootValue = '';
-let root = '';
+let expression = '';
+let lastResult = '';
 let baseExpression = '';
 let expressionPower = '';
-let exponent = '';
-let isEnteringExponent = false;
-let isEnteringRootPower = false;
 let calculationExpression = '';
 let binaryMode = false;
+let isEnteringExponent = false;
+let isEnteringRootPower = false;
+let stackState = false; // if we are in stack
 const display = document.getElementById('display');
 const originalFontSize = parseFloat(window.getComputedStyle(document.getElementById('display')).fontSize);
 const maxLength = 8;
@@ -39,15 +101,17 @@ document.addEventListener('keydown', function (event) {
     const key = event.key;
 
     let allowedKeys = []
+    console.log(key);
     // accept only the following keys
     if (binaryMode){
         allowedKeys = ['0', '1', '+', '-', '*', '/', '(', ')', '%', '!'];
     } else{
-        allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '.', '(', ')', '%', '!'];
+        allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/', '.', '(', ')', '%', '!', 'Enter'];
     }
     if (allowedKeys.includes(key)) {
+        console.log('svyat govnoed');
         appendToDisplay(key);
-    } else if (key === 'Enter' || key === '=') {
+    } else if (key === '=') {
         calculate();
         event.preventDefault();
     } else if (key === 'Backspace') {
@@ -63,6 +127,7 @@ document.addEventListener('keydown', function (event) {
         clearDisplay();
         event.preventDefault();
     }
+    
 });
 
 function appendToDisplay(value) {
@@ -80,32 +145,89 @@ function appendToDisplay(value) {
             exponent = '';
             isEnteringExponent = true;
         }
-    } else if (isEnteringRootPower) {
-        updateRootPower(value);
-    } else if (isEnteringExponent) {
+    } else if (stackState){
+        handleStackExpression(value);
+        handleView(value);
+    }else if (isEnteringExponent) {
         updatePower(value);
     } else if (value === 'rand'){
         generateRandomNumber();
     } else {
-        if (expression.length >= maxLength) {
-            const display = document.getElementById('display');
-            const currentFontSize = parseFloat(window.getComputedStyle(display).fontSize);
-            display.style.fontSize = (currentFontSize - 1.7) + 'px';
-        }
         if (binaryMode && ['0', '1', '+', '-', '*', '/', '(', ')', '%', '!'].includes(value) || !binaryMode){
             if (lastResult !== '' && ['+', '-', '*', '/', '%', '!'].includes(value) && expression === '') {
                 expression += lastResult;
                 calculationExpression += lastResult;
-                expression += value;
-                calculationExpression += value;
+                handleView(value);
+                handleCalculationExpression(value);
             }
-            else {
-                expression += value;
-                calculationExpression += value;
+            else{
+                handleView(value);
+                handleCalculationExpression(value);
             }
         } 
     }
     document.getElementById('display').innerHTML = expression;
+}
+
+function handleStackExpression(value){
+    let state = stack.peek().state;
+    console.log(state);
+    if (state === 'base'){
+        if (value === '√'){
+            insertRoot();
+        } else if (value === 'x^n'){
+            insertPower();
+        } else if (value === 'Enter' || value === '='){
+            handleView(')');
+            stack.peek().state = 'exponent';
+            isEnteringRootPower = true;
+            console.log(stack.peek().state);
+        } else{
+            stack.peek().base += value;
+            console.log(stack.peek().base);
+        }
+    } else if (state === 'exponent'){
+        console.log('TIMUR');
+        if (value === '√'){
+            console.log(isEnteringRootPower);
+            insertRoot();
+        } else if (value === 'x^n'){
+            insertPower();
+        } else if (value === 'Enter' || value === '='){
+            stack.pop();
+        } else{
+            stack.peek().exponent += value;
+        }
+    }
+}
+
+function handleView(value){
+    if (expression.length >= maxLength) {
+        const display = document.getElementById('display');
+        const currentFontSize = parseFloat(window.getComputedStyle(display).fontSize);
+        display.style.fontSize = (currentFontSize - 1.7) + 'px';
+    }
+    if (!isEnteringExponent && !isEnteringRootPower){
+        if (value != 'Enter'){
+            console.log('AAAAAAAAAAA');
+            expression += value;
+        }
+    } else if (isEnteringRootPower){
+        if (value != 'Enter'){
+            rootPower = value;
+            console.log('SVYAT');
+            index = stack.peek().position;
+            stack.peek().position = stack.peek().position + value.length;
+            console.log(stack);
+            expression = expression.slice(0, index) + rootPower + expression.slice(index);
+        }
+    }
+}
+
+function handleCalculationExpression(value){
+    if (!stackState && value !== 'Enter'){
+        calculationExpression += value;
+    }
 }
 
 function generateRandomNumber(){
@@ -144,27 +266,16 @@ function convertExpressionToDecimal(){
 }
 
 function insertRoot() {
-    // find last number in expression
-    let lastNumberRegex = /[\d\.]+(?:[eE][+-]?\d+)?$/;
-    let match = expression.match(lastNumberRegex);
-    if (match) {
-        matchCalc = calculationExpression.match(lastNumberRegex);
-        let lastNumberIndex = match.index;
-        let lastNumberIndexCalc = matchCalc.index;
-        let lastNumber = match[0];
-        // input root symbol
-        expression = expression.slice(0, lastNumberIndex) + `√${lastNumber}` + expression.slice(lastNumberIndex + lastNumber.length);
-        calculationExpression = calculationExpression.slice(0, lastNumberIndexCalc) + `√${lastNumber}` + calculationExpression.slice(lastNumberIndexCalc + lastNumber.length);
-        root = `√${lastNumber}`;
-        rootValue = root;
-    } else {
-        expression = `√()${expression}`;
-        calculationExpression = `√()${expression}`;
-        root = `√()`;
-        rootValue = root;
+    stackState = true;
+    if (isEnteringRootPower){
+        position = stack.peek().position;
+    } else{
+        position = expression.length;
     }
-    isEnteringRootPower = true;
-    rootPower = '';
+    item = new StackItem('r', position);
+    stack.push(item);
+
+    handleView('√(');
 }
 
 function updateRootPower(value) {
@@ -240,6 +351,7 @@ async function calculate() {
                 result = parseInt(result).toString(2);
             } else{
                 result = await eel.calculate(calculationExpression, binaryMode)();
+                console.log(calculationExpression);
             }
             document.getElementById('output').value = result;
             
@@ -264,23 +376,23 @@ async function calculate() {
             applyAnimation(output);
         }
     }
-    else if (isEnteringRootPower) {
-        isEnteringRootPower = false;
-        rootValue = root.split('√')[1];
-        rootPower = await eel.calculate(rootPower, binaryMode)();
-        calculationExpression = calculationExpression.replace(`${root}`, `r[${rootPower}, ${rootValue}]`);
+    // else if (isEnteringRootPower) {
+    //     isEnteringRootPower = false;
+    //     rootValue = root.split('√')[1];
+    //     rootPower = await eel.calculate(rootPower, binaryMode)();
+    //     calculationExpression = calculationExpression.replace(`${root}`, `r[${rootPower}, ${rootValue}]`);
 
-        rootPower = '';
-        rootValue = '';
-        root = '';
-    }
-    else if (isEnteringExponent) {
-        calculationExpression = calculationExpression.replace(expressionPower, `p[${baseExpression}, ${exponent}]`);
-        isEnteringExponent = false;
-        exponent = '';
-        expressionPower = '';
-        baseExpression = '';
-    }
+    //     rootPower = '';
+    //     rootValue = '';
+    //     root = '';
+    // }
+    // else if (isEnteringExponent) {
+    //     calculationExpression = calculationExpression.replace(expressionPower, `p[${baseExpression}, ${exponent}]`);
+    //     isEnteringExponent = false;
+    //     exponent = '';
+    //     expressionPower = '';
+    //     baseExpression = '';
+    // }
 }
 
 function applyAnimation(element) {

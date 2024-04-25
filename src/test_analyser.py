@@ -41,7 +41,7 @@ class TestAnalyserclass(unittest.TestCase):
 
     
     def test_root (self):
-        expr = "100 - r[2, 4]"
+        expr = "100 - r[4,2]"
         self.assertEqual(98, (self.analyser.analyse(expr)))
 
     def test_factorial(self):
@@ -49,7 +49,7 @@ class TestAnalyserclass(unittest.TestCase):
         self.assertEqual(94, (self.analyser.analyse(expr)))
 
     def test_rootfactorial(self):
-        expr = "r[2,100] !"
+        expr = "r[100, 2] !"
         self.assertEqual(3628800, (self.analyser.analyse(expr)))
 
     def test_power_zero(self):

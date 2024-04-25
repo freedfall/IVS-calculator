@@ -89,14 +89,19 @@ class Stack:
                     elif tt == "POWER" or tt == "ROOT":
                         data = list(reversed(self.items))[0]["value"][2:-1]
                         data = data.split(',', 1)
+                        print(data)
                         subanalyser = Analyser()
-                        expr = subanalyser.analyse(data[1])
-                        if isinstance(expr,bool) and expr == False:
+                        base = subanalyser.analyse(data[0])
+                        subanalyser.reinitialize_stack()
+                        exponent = subanalyser.analyse(data[1])
+                        print(base, exponent)
+                        if (isinstance(base, bool) and base == False) or (isinstance(exponent, bool) and exponent == False) :
                             raise ValueError(f'error in function arguments') 
                         if tt == "POWER":
-                            new_value = power(self.str_to_digit_converter(data[0]), expr)
+                            
+                            new_value = power(base, exponent)
                         else:
-                            new_value = root(expr, self.str_to_digit_converter(data[0]))
+                            new_value = root(base, exponent)
                     for i in range(2): 
                         self.items.pop()
                 else: 
