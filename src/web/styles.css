@@ -230,6 +230,10 @@ button:hover {
     margin: 10% auto 0 auto;
     overflow:-moz-hidden-unscrollable;
 }
+.log .root-power{
+    font-size: 1vw;
+}
+
 .slider {
     position: absolute;
     cursor: pointer;
