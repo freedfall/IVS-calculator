@@ -49,6 +49,7 @@ class Stack{
         } else{
             calculationExpression += expr;
             isEnteringRootPower = false;
+            isEnteringExponent = false;
             stackState = false;
         }
     }
@@ -136,20 +137,10 @@ function appendToDisplay(value) {
     } else if (value === '√' && !binaryMode) {
         insertRoot();
     } else if (value === 'x^n' && !binaryMode) {
-        let lastNumberRegex = /[\d\.]+(?:[eE][+-]?\d+)?$/;
-        let match = expression.match(lastNumberRegex);
-        if (match) {
-            // save last number or expression as exponent base
-            baseExpression = match[0];
-            expressionPower = baseExpression;
-            exponent = '';
-            isEnteringExponent = true;
-        }
+        insertPower();
     } else if (stackState){
         handleStackExpression(value);
         handleView(value);
-    }else if (isEnteringExponent) {
-        updatePower(value);
     } else if (value === 'rand'){
         generateRandomNumber();
     } else {
@@ -178,16 +169,16 @@ function handleStackExpression(value){
         } else if (value === 'x^n'){
             insertPower();
         } else if (value === 'Enter' || value === '='){
-            handleView(')');
+            if (stack.peek().type === 'r'){
+                handleView(')');
+            }
             stack.peek().state = 'exponent';
             isEnteringRootPower = true;
-            console.log(stack.peek().state);
+            isEnteringExponent = true;
         } else{
             stack.peek().base += value;
-            console.log(stack.peek().base);
         }
     } else if (state === 'exponent'){
-        console.log('TIMUR');
         if (value === '√'){
             console.log(isEnteringRootPower);
             insertRoot();
@@ -201,31 +192,48 @@ function handleStackExpression(value){
     }
 }
 
+function get_position(){
+    if (stackState){
+        return stack.peek().position;
+    } else {
+        return expression.length;
+    }
+}
+
 function handleView(value){
     if (expression.length >= maxLength) {
         const display = document.getElementById('display');
         const currentFontSize = parseFloat(window.getComputedStyle(display).fontSize);
         display.style.fontSize = (currentFontSize - 1.7) + 'px';
     }
+    if (value === 'rand'){
+        generateRandomNumber();
+    }
     if (!isEnteringExponent && !isEnteringRootPower){
-        if (value != 'Enter'){
-            console.log('AAAAAAAAAAA');
+        if (value != 'Enter' && value != 'rand'){
             expression += value;
         }
     } else if (isEnteringRootPower){
-        if (value != 'Enter'){
+        if (value != 'Enter' && value != 'rand'){
             rootPower = value;
-            console.log('SVYAT');
             index = stack.peek().position;
+            console.log(position);
             stack.peek().position = stack.peek().position + value.length;
             console.log(stack);
             expression = expression.slice(0, index) + rootPower + expression.slice(index);
+        }
+    } else if (isEnteringExponent){
+        if (value != 'Enter' && value != 'rand'){
+            exponent = `<sup class="root-power">${value}</sup>`;
+            index = stack.peek().position + 1;
+            stack.peek().position = stack.peek().position + value.lenght;
+            expression = expression.slice(0, index) + exponent + expression.slice(index);
         }
     }
 }
 
 function handleCalculationExpression(value){
-    if (!stackState && value !== 'Enter'){
+    if (!stackState && value !== 'Enter' && value !== 'rand'){
         calculationExpression += value;
     }
 }
@@ -236,12 +244,12 @@ function generateRandomNumber(){
         for (let i = 0; i < 8; i++){
             value += Math.floor(Math.random() * 2);
         }
-        expression += value;
-        calculationExpression += value;
+        handleView(value);
+        handleCalculationExpression(value);
     } else{
         value = Math.floor(Math.random() * Math.floor(101));
-        expression += value;
-        calculationExpression += value;
+        handleView(value);
+        handleCalculationExpression(value);
     } 
 }
 
@@ -276,6 +284,17 @@ function insertRoot() {
     stack.push(item);
 
     handleView('√(');
+}
+
+function insertPower(){
+    stackState = true;
+    if (isEnteringExponent){
+        position = stack.peek().position + 1;
+    } else {
+        position = expression.length + 1;
+    }
+    item = new StackItem('p', position);
+    stack.push(item);
 }
 
 function updateRootPower(value) {
@@ -323,6 +342,7 @@ function clearDisplay() {
     root = '';
     baseExpression = '';
     exponent = '';
+    lastResult = ''
     isEnteringExponent = false;
     isEnteringRootPower = false;
     display.innerHTML = '';
@@ -370,6 +390,9 @@ async function calculate() {
                 // back to the original font size
                 display.style.fontSize = originalFontSize + 'px';
             }
+
+            isEnteringExponent = false;
+            isEnteringRootPower = false;
         } catch (error) {
             console.log(error);
             document.getElementById('output').value = 'Error';
