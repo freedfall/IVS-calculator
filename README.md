@@ -2,7 +2,7 @@
 Simple calculator app and Profiling script for school project
 
 # Environment 
-Ubuntu 64bit
+Windows 64bit
 
 # Autors 
 - Team: sisimasisi
