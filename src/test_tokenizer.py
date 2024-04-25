@@ -1,3 +1,11 @@
+##
+# @file test_analyser.py
+#
+# @brief Unit tests for the Analyser class in the expression_parser module.
+#
+# @author Artem Dvorychanskyi
+##
+
 import unittest
 from expression_parser import Analyser  # Assuming Analyzer class is defined in analyser.py
 

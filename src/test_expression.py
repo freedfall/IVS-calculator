@@ -1,7 +1,7 @@
 ## 
 # @file test.py
 # @brief Test cases for the math library
-# @Author: Sviatoslav Shisnev
+# @author: Sviatoslav Shisnev
 ##
 
 import unittest

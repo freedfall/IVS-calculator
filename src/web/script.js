@@ -1,5 +1,15 @@
+/**
+ * @file script.js
+ * @brief This script handles the functionality of a calculator with a dark mode theme toggle.
+ * @author Timur Kininbayev 
+ * @author Aryna Zhukava
+ */
 
-// Change the theme of the calculator
+
+/**
+ * @brief Event listener for DOMContentLoaded event.
+ * @details Sets the theme of the calculator based on the checkbox state or the stored theme in localStorage.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const checkbox = document.getElementById('checkbox');
     const isDarkMode = checkbox.checked || localStorage.getItem('theme') === 'dark';
@@ -7,6 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     checkbox.checked = isDarkMode;
   });
  
+/**
+ * @brief Event listener for change event on checkbox.
+ * @details Toggles the theme of the calculator and stores the theme in localStorage.
+ */
 document.getElementById('checkbox').addEventListener('change', function() {
     if (this.checked) {
         document.documentElement.setAttribute('data-theme', 'dark');
@@ -34,6 +48,10 @@ const display = document.getElementById('display');
 const originalFontSize = parseFloat(window.getComputedStyle(document.getElementById('display')).fontSize);
 const maxLength = 8;
 
+/**
+ * @brief Event listener for keydown event.
+ * @details Handles the key inputs for the calculator.
+ */
 document.addEventListener('keydown', function (event) {
     const display = document.getElementById('display');
     const key = event.key;
@@ -65,6 +83,10 @@ document.addEventListener('keydown', function (event) {
     }
 });
 
+/**
+ * @brief Appends the given value to the display.
+ * @param value The value to append to the display.
+ */
 function appendToDisplay(value) {
     if (value === 'bin'){
         toggleBinaryMode();
@@ -108,6 +130,9 @@ function appendToDisplay(value) {
     document.getElementById('display').innerHTML = expression;
 }
 
+/**
+ * @brief Generates a random number and appends it to the display.
+ */
 function generateRandomNumber(){
     if (binaryMode){
         value = ''
@@ -123,6 +148,9 @@ function generateRandomNumber(){
     } 
 }
 
+/**
+ * @brief Toggles the binary mode of the calculator.
+ */
 function toggleBinaryMode(){
     binaryMode = !binaryMode;
     if (binaryMode){
@@ -132,6 +160,9 @@ function toggleBinaryMode(){
     }
 }
 
+/**
+ * @brief Converts the binary expression to decimal.
+ */
 function convertExpressionToDecimal(){
     // Regular expression to find binary numbers adjacent to arithmetic operators or at the start/end of the string
     const binaryRegex = /(^|\s|[\+\-\*\/\(])([01]+)(\s|[\+\-\*\/\)]|$)/g;
@@ -143,6 +174,9 @@ function convertExpressionToDecimal(){
     });
 }
 
+/**
+ * @brief Inserts a root symbol in the expression.
+ */
 function insertRoot() {
     // find last number in expression
     let lastNumberRegex = /[\d\.]+(?:[eE][+-]?\d+)?$/;
@@ -167,6 +201,10 @@ function insertRoot() {
     rootPower = '';
 }
 
+/**
+ * @brief Updates the root power with the given value.
+ * @param value The value to update the root power with.
+ */
 function updateRootPower(value) {
     rootPower += value;
     let updatedRoot = `<sup class='root-power'>${rootPower}</sup>${rootValue}`;
@@ -175,6 +213,10 @@ function updateRootPower(value) {
     root = updatedRoot;
 }
 
+/**
+ * @brief Updates the power with the given value.
+ * @param value The value to update the power with.
+ */
 function updatePower(value) {
     exponent += value;
     let updatedExpression = `${baseExpression}<sup class='root-power'>${exponent}</sup>`;
@@ -183,17 +225,9 @@ function updatePower(value) {
     expressionPower = updatedExpression;
 }
 
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Backspace') {
-        // if the font size is smaller than the original size
-        const currentFontSize = parseFloat(window.getComputedStyle(document.getElementById('display')).fontSize);
-        if (currentFontSize < originalFontSize) {
-            // back to the original font size
-            display.style.fontSize = (currentFontSize + 1.5) + 'px';
-        }
-    }
-});
-
+/**
+ * @brief Toggles the visibility of the log.
+ */
 function toggleLog() {
     const logElement = document.getElementById('log');
     if (logElement.style.display === 'none') {
@@ -204,6 +238,10 @@ function toggleLog() {
         logElement.style.display = 'none';
     }
 }
+
+/**
+ * @brief Clears the display.
+ */
 function clearDisplay() {
     expression = '';
     calculationExpression = '';
@@ -220,6 +258,9 @@ function clearDisplay() {
     applyAnimation(output);
 }
 
+/**
+ * @brief Handles the log by removing the first line if there are more than 3 lines.
+ */
 function handleLog(){
     //count the number of <br> tags in the log
     let count = (log.match(/<br>/g) || []).length;
@@ -231,6 +272,9 @@ function handleLog(){
     }
 }
 
+/**
+ * @brief Calculates the result of the expression.
+ */
 async function calculate() {
     if (!isEnteringRootPower && !isEnteringExponent) {
         try {
@@ -283,6 +327,10 @@ async function calculate() {
     }
 }
 
+/**
+ * @brief Applies an animation to the given element.
+ * @param element The element to apply the animation to.
+ */
 function applyAnimation(element) {
     element.classList.remove('input-animate', 'output-animate');
     void element.offsetWidth; // Trigger reflow to restart animation

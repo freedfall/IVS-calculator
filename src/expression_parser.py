@@ -1,40 +1,85 @@
 ## 
 # @file expression_parser.py
 # @brief Expression parser implementation 
-# @Author: Svaitoslav Shishnev
-# @Author: Artem Dvorychanskiy
+# @author: Sviatoslav Shishnev
+# @author: Artem Dvorychanskyi
 ##
 
 import re
 import traceback
 from calc import *
 
- 
-
 class Stack:
+    """
+    Represents a stack data structure for the expression parser.
+    """
     def __init__(self):
+        """
+        Initializes an empty stack with an END terminal item.
+        """
         self.items = [] 
         self.items.append(self.create_item(token_type="END", item_type="T"))
 
     def is_empty(self):
+        """
+        Checks if the stack is empty.
+
+        Returns:
+            bool: True if the stack is empty, False otherwise.
+        """
         return len(self.items) == 0
 
     def push(self, item):
+        """
+        Pushes an item onto the stack.
+
+        Args:
+            item (dict): The item to push onto the stack.
+        """
         self.items.append(item)
 
     def top_terminal(self):
+        """
+        Returns the topmost terminal item from the stack.
+
+        Returns:
+            dict: The topmost terminal item.
+        
+        Raises:
+            IndexError: If the stack is empty or if no terminal item is found.
+        """
         if not self.is_empty():
             reversed_list = reversed(self.items)
             for item in reversed_list:
                 if item["item_type"] == "T": # T is for terminal 
                     return item
         raise IndexError("Top function performed on empty stack or terminal was not found")
+    
     def find_index_of_terminal(self):
+        """
+        Finds the index of the topmost terminal item in the stack.
+
+        Returns:
+            int: The index of the topmost terminal item in the stack.
+        """
         reversed_list = list(reversed(self.items))
         for i in range(len(reversed_list)):
             if reversed_list[i]["item_type"] == "T": # T is for terminal 
                 return len(self.items) - i 
+            
     def pop(self, index=None):
+        """
+        Pops an item from the stack.
+
+        Args:
+            index (int, optional): The index of the item to pop. Defaults to None, which pops the top item.
+
+        Returns:
+            dict: The popped item from the stack.
+
+        Raises:
+            IndexError: If the stack is empty.
+        """
         if not self.is_empty():
             if index != None:
                 return self.items.pop(index)
@@ -43,6 +88,15 @@ class Stack:
             raise IndexError("pop from empty stack")
         
     def str_to_digit_converter(self, string):
+        """
+        Converts a string representation of a number to either an integer or a float.
+
+        Args:
+            string (str): The string representation of the number.
+
+        Returns:
+            int or float: The converted number.
+        """
         if re.search(r'.*\..*', string):
             value = float(string)
         else:
@@ -50,6 +104,12 @@ class Stack:
         return value
 
     def reduce_rule(self): 
+        """
+        Reduces the stack based on certain reduction rules.
+
+        Returns:
+            bool: True if a reduction rule was applied, False otherwise.
+        """
         reversed_items = list(reversed(self.items))
         for i in range(self.size()):
             if reversed_items[i]["item_type"] == "CATCH":
@@ -107,14 +167,37 @@ class Stack:
         return False
 
     def size(self):
+        """
+        Returns the size of the stack.
+
+        Returns:
+            int: The size of the stack.
+        """
         return len(self.items)
     
     def create_item( self, item_type="UN", value="", token_type=""):
+        """
+        Creates a new item for the stack.
+
+        Args:
+            item_type (str, optional): The type of the item. Defaults to "UN".
+            value (str, optional): The value of the item. Defaults to "".
+            token_type (str, optional): The token type of the item. Defaults to "".
+
+        Returns:
+            dict: The newly created item.
+        """
         return { 'item_type': item_type, 'value': value, "token_type": token_type}
 
 class Analyser:
+    """
+    Represents an expression analyser.
+    """
 
     def __init__(self):
+        """
+        Initializes the expression analyser with a stack and expression tables.
+        """
         self.stack = Stack()
         self.exp_table = [
             # "+", "*", "(", ")", "id", "$", "!"
@@ -139,9 +222,21 @@ class Analyser:
         }
 
     def reinitialize_stack(self):
+        """
+        Reinitializes the stack.
+        """
         self.stack = Stack()
 
     def tokenize(self, expression):
+        """
+        Tokenizes the input expression.
+
+        Args:
+            expression (str): The input expression.
+
+        Returns:
+            list: The list of tokens.
+        """
         expression = expression.replace(" ",'')
         tokens = []
         regex_pattern = r"([-+*/%!])|(\d+(\.\d+)?)|(\()|(\)|([rp]\[[^\]]+\]))"
@@ -181,10 +276,28 @@ class Analyser:
         return tokens
     
     def access_table(self, token):
+        """
+        Accesses the expression table based on the input token.
+
+        Args:
+            token (dict): The token to access the expression table.
+
+        Returns:
+            str: The entry in the expression table.
+        """
         stack_symbol = self.stack.top_terminal()["token_type"]
         return self.exp_table[self.symbol_to_index_map[stack_symbol]][self.symbol_to_index_map[token]]
 
     def analyse(self, expr):
+        """
+        Analyzes the input expression.
+
+        Args:
+            expr (str): The input expression.
+
+        Returns:
+            bool or int or float: The result of the analysis.
+        """
         try:
             result = self.analyse_tokens(self.tokenize(expr))
         except:
@@ -195,6 +308,15 @@ class Analyser:
             return False
 
     def analyse_tokens(self, token_stream):
+        """
+        Analyzes a stream of tokens.
+
+        Args:
+            token_stream (list): The stream of tokens.
+
+        Returns:
+            list: A list indicating the success of the analysis and its result.
+        """
         for token in token_stream:
             try:
                 result = self.handleToken(token)
@@ -203,6 +325,18 @@ class Analyser:
         return [True, result]
     
     def handleToken(self, token):
+        """
+        Handles a single token.
+
+        Args:
+            token (dict): The token to handle.
+
+        Returns:
+            int or float: The result of handling the token.
+
+        Raises:
+            ValueError: If an error occurs while handling the token.
+        """
         symbol = self.access_table(token["token_type"])
         if symbol == ">":
             if not(self.stack.reduce_rule()):
