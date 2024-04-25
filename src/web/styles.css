@@ -14,7 +14,7 @@ body {
     width: 100%;
     background-color: #8972AE;
     font-family: 'Inter', sans-serif;
-    overflow:visible;
+    overflow:hidden;
     transition: background-color 0.5s ease, color 0.5s ease;
 }
 

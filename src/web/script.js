@@ -5,7 +5,6 @@
  * @author Aryna Zhukava
  */
 
-
 /**
  * @brief Event listener for DOMContentLoaded event.
  * @details Sets the theme of the calculator based on the checkbox state or the stored theme in localStorage.

@@ -7,11 +7,21 @@ all: run
 pack:
 	@echo "=== Zabalím projekt ==="
 	# Add commands to pack the project here
+	doxygen Doxyfile
+	mkdir xkinin00_xdvory00_xshish02_xzhuka01
+	cp -r doc xkinin00_xdvory00_xshish02_xzhuka01
+	cd xkinin00_xdvory00_xshish02_xzhuka01
+	mkdir repo
+	cd ..
+	cp -r * xkinin00_xdvory00_xshish02_xzhuka01/repo
+	cd ..
+	zip -r xkinin00_xdvory00_xshish02_xzhuka01
 
 # Target to clean unnecessary files
 clean:
 	@echo "=== Mažu nepotřebné soubory ==="
-	# Add commands to clean unnecessary files here
+	rm -rf doc 
+	rm -rf xkinin00_xdvory00_xshish02_xzhuka01
 
 # Target to run the pre-compiled program
 run:
@@ -22,7 +32,6 @@ run:
 profile:
 	@echo "=== Spouštím program pro výpočet směrodatné odchylky ==="
 	python3 ./src/profile_stddev.py
-	# Add commands to run program with sample input for profiling here
 
 # Target to display help
 help:
