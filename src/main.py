@@ -10,4 +10,4 @@ elif eel.edge.find_path():
 else:
     mode ='default' 
 
-eel.start('index.html', mode=mode)
+eel.start('index.html', mode=mode, size=(1000, 600))
