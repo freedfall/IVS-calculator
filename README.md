@@ -1,6 +1,8 @@
 # Project details
 Simple calculator app and Profiling script for school project
 
+![screen](screenshot.png)
+
 # Environment 
 Windows 64bit
 
